@@ -51,14 +51,14 @@ public class SecurityConfig {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Use cookie CSRF token repository
             )
             .authorizeRequests(authorize -> authorize
-                .requestMatchers("/index","/doctor-login","/user-login","/hospital-login","/signup", "/login", "/reset-password", "/security-question", "/update-password", "/rooms/**").permitAll()
+                .requestMatchers("/index","/doctor-login","/dashboard","/login","/hospital-login","/signup", "/reset-password", "/security-question", "/update-password").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/index")
-                .defaultSuccessUrl("/index", true)
-                .failureUrl("/login?error=true")
-            )
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/dashboard", true)
+                    .failureUrl("/login?error=true")
+                )
             .logout(logout -> logout
                 .logoutUrl("/logout") // The URL for logging out
                 .logoutSuccessUrl("/login?logout=true") // Redirect after successful logout
