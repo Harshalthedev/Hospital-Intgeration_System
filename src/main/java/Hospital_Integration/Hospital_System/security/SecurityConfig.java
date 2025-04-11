@@ -51,7 +51,8 @@ public class SecurityConfig {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Use cookie CSRF token repository
             )
             .authorizeRequests(authorize -> authorize
-                .requestMatchers("/index","/doctor-login","/dashboard","/login","/hospital-login","/signup", "/reset-password", "/security-question", "/update-password").permitAll()
+                .requestMatchers("/index","/doctor-login","/dashboard","/login","/signup", "/reset-password", "/security-question", "/update-password"
+                		,"/hospital/login", "/hospital/signup").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
