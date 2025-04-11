@@ -29,9 +29,9 @@ public class HospitalService {
     }
 
 //    // Method to find a user by email
-//    public UserModel findByEmail(String email) {
-//        return userRepository.findByEmail(email);
-//    }
+    public HospitalModel findByEmail(String email) {
+        return hospitalRepo.findByEmail(email);
+    }
 //    
 //    // JPA save() can handle updates on existing entities
 //    public UserModel updateUser(UserModel user) {

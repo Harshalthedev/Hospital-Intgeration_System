@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,7 +37,7 @@ public class HospitalController {
     
     @GetMapping("/signup")
     public ModelAndView showSignupPage() {
-        return new ModelAndView("signup");
+        return new ModelAndView("hospital-signup");
     }
 
     @GetMapping("/login")
@@ -49,10 +50,10 @@ public class HospitalController {
         try {
             hospitalService.registerHospital(hospitalDto.getEmail(), hospitalDto.getPassword(), hospitalDto.getDisplayName(), hospitalDto.getHospitalId());
             redirectAttributes.addFlashAttribute("successMessage", "User registered successfully! Please log in.");
-            return new RedirectView("/hospital/login");
+            return new RedirectView("hospital/login");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return new RedirectView("/hospital/signup");
+            return new RedirectView("hospital/signup");
         }
     }
     
@@ -67,10 +68,20 @@ public class HospitalController {
                 return new RedirectView("/hospital/dashboard");
             }
         } catch (AuthenticationException e) {
-            RedirectView redirectView = new RedirectView("/login");
+            RedirectView redirectView = new RedirectView("hospital/login");
             redirectView.addStaticAttribute("error", true);
             return redirectView;
         }
-        return new RedirectView("/login?error=true");
+        return new RedirectView("hospital/login?error=true");
+    }
+    
+    @GetMapping("/dashboard")
+    public ModelAndView showDashboardPage() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String displayUserName = hospitalService.findByEmail(authentication.getName()).getDisplayName();
+
+        ModelAndView modelAndView = new ModelAndView("dashboard");
+        modelAndView.addObject("displayUserName", displayUserName);
+        return modelAndView;
     }
 }

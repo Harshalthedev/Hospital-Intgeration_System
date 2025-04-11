@@ -52,7 +52,7 @@ public class SecurityConfig {
             )
             .authorizeRequests(authorize -> authorize
                 .requestMatchers("/index","/doctor-login","/dashboard","/login","/signup", "/reset-password", "/security-question", "/update-password"
-                		,"/hospital/login", "/hospital/signup").permitAll()
+                		,"/hospital/login", "/hospital/signup", "hospital/dasdboard").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

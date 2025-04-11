@@ -30,11 +30,6 @@ public class HospitalModel {
 
 	public HospitalModel() {}
 	
-    public HospitalModel(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-	
 	public HospitalModel( String email, String password, String displayName, int hospitalId) {
 		super();
 		this.email = email;
@@ -42,6 +37,11 @@ public class HospitalModel {
 		this.displayName = displayName;
 		this.hospitalId = hospitalId;
 	}
+	
+    public HospitalModel(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
 
 	public String getEmail() {
