@@ -44,44 +44,44 @@ public class HospitalController {
     public ModelAndView showLoginPage() {
         return new ModelAndView("hospital-login");
     }
+    
+    @GetMapping("/dashboard")
+    public ModelAndView showDashboardPage() {
+        return new ModelAndView("hospital-dashboard");
+    }
  
     @PostMapping("/signup")
     public RedirectView registerHospital(@ModelAttribute HospitalDto hospitalDto, RedirectAttributes redirectAttributes) {
         try {
-            hospitalService.registerHospital(hospitalDto.getEmail(), hospitalDto.getPassword(), hospitalDto.getDisplayName(), hospitalDto.getHospitalId());
+            hospitalService.registerHospital(hospitalDto.getEmail(), hospitalDto.getPassword(), hospitalDto.getDisplayName(), hospitalDto.gethospitalId());
             redirectAttributes.addFlashAttribute("successMessage", "User registered successfully! Please log in.");
-            return new RedirectView("hospital/login");
+            return new RedirectView("/hospital/login");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return new RedirectView("hospital/signup");
+            return new RedirectView("/hospital/signup");
         }
     }
     
     @PostMapping("/login")
     public RedirectView login(@RequestParam String username, @RequestParam String password) {
-        try {
-            Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
-            );
+        System.out.println("i am in hospital");
+        
 
-            if (auth.isAuthenticated()) {
+    	try {
+            boolean hospitalAuth = hospitalService.loginHospital(username, password);
+            System.out.println(hospitalAuth);
+
+            if (hospitalAuth) {
                 return new RedirectView("/hospital/dashboard");
             }
+            
         } catch (AuthenticationException e) {
-            RedirectView redirectView = new RedirectView("hospital/login");
+            RedirectView redirectView = new RedirectView("/hospital/login");
             redirectView.addStaticAttribute("error", true);
             return redirectView;
         }
-        return new RedirectView("hospital/login?error=true");
+        return new RedirectView("/hospital/login?error=true");
     }
     
-    @GetMapping("/dashboard")
-    public ModelAndView showDashboardPage() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String displayUserName = hospitalService.findByEmail(authentication.getName()).getDisplayName();
-
-        ModelAndView modelAndView = new ModelAndView("dashboard");
-        modelAndView.addObject("displayUserName", displayUserName);
-        return modelAndView;
-    }
+   
 }

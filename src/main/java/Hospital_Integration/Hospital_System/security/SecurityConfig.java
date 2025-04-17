@@ -51,12 +51,12 @@ public class SecurityConfig {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Use cookie CSRF token repository
             )
             .authorizeRequests(authorize -> authorize
-                .requestMatchers("/index","/doctor-login","/dashboard","/login","/signup", "/reset-password", "/security-question", "/update-password"
-                		,"/hospital/login", "/hospital/signup", "hospital/dasdboard").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/index","/doctor-login","/login","/signup", "/reset-password", "/security-question", "/update-password"
+                		,"/hospital/login", "/hospital/signup","/dashboard","/hospital/dashboard").permitAll()
+//                .requestMatchers("/dashboard", "/hospital/dashboard").authenticated()
             )
-            .formLogin(form -> form
-                    .loginPage("/login")
+            .formLogin(form -> form                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                    .loginPage("/index")
                     .defaultSuccessUrl("/dashboard", true)
                     .failureUrl("/login?error=true")
                 )

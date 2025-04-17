@@ -28,7 +28,7 @@ public class HospitalService {
         return hospitalRepo.save(hospital);
     }
 
-//    // Method to find a user by email
+    // Method to find a user by email
     public HospitalModel findByEmail(String email) {
         return hospitalRepo.findByEmail(email);
     }
@@ -60,4 +60,15 @@ public class HospitalService {
 //            userRepository.save(user);
 //        }
 //    }
+
+    public boolean loginHospital(String email, String password) {
+        HospitalModel hospital = hospitalRepo.findByEmail(email);
+
+        if (hospital == null) {
+            return false; // No hospital found with the given email
+        }
+
+        return passwordEncoder.matches(password, hospital.getPassword());
+    }
+
 }

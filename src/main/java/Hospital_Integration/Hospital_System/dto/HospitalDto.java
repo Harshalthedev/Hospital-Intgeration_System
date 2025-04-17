@@ -5,7 +5,7 @@ public class HospitalDto {
     private String email;
     private String password;
     private String displayName;
-    private int HospitalId;
+    private int hospitalId;
 	
     
     
@@ -27,18 +27,19 @@ public class HospitalDto {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
-	public int getHospitalId() {
-		return HospitalId;
+	public int gethospitalId() {
+		return hospitalId;
 	}
 	public void setHospitalId(int hospitalId) {
-		HospitalId = hospitalId;
+		hospitalId = hospitalId;
 	}
 
-	public HospitalDto(String email, String password, String displayName, int HospitalId) {
+	public HospitalDto(String email, String password, String displayName, int hospitalId) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.displayName = displayName;
-		this.HospitalId = HospitalId;
+		this.hospitalId = hospitalId;
 	} 
+ 
 }
