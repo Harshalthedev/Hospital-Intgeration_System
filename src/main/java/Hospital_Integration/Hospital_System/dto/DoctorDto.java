@@ -6,8 +6,6 @@ public class DoctorDto {
     private String displayName;
     private String specialization;
     private int hospitalId;
-	private String securityQuestion1;
-    private String securityQuestion2;
    
 	// Getters and Setters
     public String getEmail() { return email; }
@@ -21,22 +19,6 @@ public class DoctorDto {
     
     public String getSpecialization() {return specialization;}
 	public void setSpecialization(String specialization) {this.specialization = specialization;}
-    
-    public String getSecurityQuestion1() {
-		return securityQuestion1;
-	}
-
-	public void setSecurityQuestion1(String securityQuestion1) {
-		this.securityQuestion1 = securityQuestion1;
-	}
-
-	public String getSecurityQuestion2() {
-		return securityQuestion2;
-	}
-
-	public void setSecurityQuestion2(String securityQuestion2) {
-		this.securityQuestion2 = securityQuestion2;
-	}
 	
 	public int gethospitalId() {
 		return hospitalId;

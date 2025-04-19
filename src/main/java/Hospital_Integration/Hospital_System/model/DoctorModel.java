@@ -15,7 +15,7 @@ public class DoctorModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -28,29 +28,21 @@ public class DoctorModel {
     @Column(unique = true, nullable = false)
     private int hospitalId;
     
-    @Column(unique = true, nullable = false)
+    @Column(name = "specialization", nullable = false)
     private String specialization;
-    
-    @Column(name = "SQ1", nullable = false)
-    private String securityQuestion1;
-    
-    @Column(name = "SQ2", nullable = false)
-    private String securityQuestion2;
 
 	public DoctorModel() {}
 	
-	public DoctorModel( String email, String password, String displayName, int hospitalId, String specialization, String securityQuestion1, String securityQuestion2) {
+	public DoctorModel( String email, String password, String displayName, int hospitalId, String specialization) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.displayName = displayName;
 		this.hospitalId = hospitalId;
         this.specialization = specialization;
-        this.securityQuestion2 = securityQuestion2;
-        this.securityQuestion1 = securityQuestion1;
 	}
 	
-    public DoctorModel(String email, String password, int hositalId, String specialization) {
+    public DoctorModel(String email, String password, int hospitalId, String specialization) {
         this.email = email;
         this.password = password;
         this.hospitalId = hospitalId;
@@ -97,22 +89,6 @@ public class DoctorModel {
 	public void setSpecialization(String specialization) {
 		this.specialization = specialization;
 	}
-	
-    public String getSecurityQuestion1() {
-        return securityQuestion1;
-    }
-
-    public void setSecurityQuestion1(String securityQuestion1) {
-        this.securityQuestion1 = securityQuestion1;
-    }
-    
-    public String getSecurityQuestion2() {
-        return securityQuestion2;
-    }
-
-    public void setSecurityQuestion2(String securityQuestion2) {
-        this.securityQuestion2 = securityQuestion2;
-    }
     
 }
 

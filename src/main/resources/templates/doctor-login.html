@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        .login-container {
+            background: #1a1a1a;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(255, 255, 255);
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-weight: bold;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background: #222;
+            color: #fff;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #003f7f);
+        }
+
+        .error {
+            color: #ff4d4d;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .signup-link a {
+            color: #007BFF;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Doctor Login</h1>
+        <!-- Display login errors if they exist -->
+        <div th:if="${param.error}" class="error">
+            Invalid email or password. Please try again.
+        </div>
+		<form th:action="@{/doctor/login}" method="post">
+		    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+		    <div class="form-group">
+		        <label for="username">Email:</label>
+		        <input type="email" id="username" name="username" required placeholder="Enter your email" />
+		    </div>
+		    <div class="form-group">
+		        <label for="password">Password:</label>
+		        <input type="password" id="password" name="password" required placeholder="Enter your password" />
+		    </div>
+			<div class="form-group">
+					        <label for="hospitalId">Email:</label>
+					        <input type="hospitalId" id="hospitalId" name="hospitalId" required placeholder="Enter your HospitalId" />
+					    </div>
+		    <button type="submit" class="btn">Login</button>
+		</form>
+
+        <div class="signup-link">
+            <p>Don’t have an account? <a th:href="@{/doctor/signup}">Sign up here</a>.</p>
+        </div>
+    </div>
+</body>
+</html>
