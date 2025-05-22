@@ -1,9 +1,13 @@
 package Hospital_Integration.Hospital_System.services;
 
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import Hospital_Integration.Hospital_System.model.DoctorModel;
 import Hospital_Integration.Hospital_System.model.HospitalModel;
+import Hospital_Integration.Hospital_System.repository.DoctorRepo;
 import Hospital_Integration.Hospital_System.repository.HospitalRepo;
 
 @Service
@@ -29,13 +33,8 @@ public class HospitalService {
     }
     
     public HospitalModel findByHospitalId(int hospitalId) {
-    	System.out.print(hospitalRepo.findByHospitalId(hospitalId));
+//    	System.out.print(hospitalRepo.findByHospitalId(hospitalId));
     	return hospitalRepo.findByHospitalId(hospitalId);
-    }
-
-    // Method to find a user by email
-    public HospitalModel findByEmail(String email) {
-        return hospitalRepo.findByEmail(email);
     }
 
     public boolean loginHospital(String email, String password) {
@@ -47,5 +46,16 @@ public class HospitalService {
 
         return passwordEncoder.matches(password, hospital.getPassword());
     }
+    
+    // Method to find a user by email
+    public HospitalModel findByEmail(String email) {
+        return hospitalRepo.findByEmail(email);
+    }
 
+
+    
+    public List<HospitalModel> getAllAvailableHospitals() {
+        List<HospitalModel> hospitals = hospitalRepo.findAll();
+        return hospitals;
+    }
 }

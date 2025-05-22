@@ -1,11 +1,18 @@
 package Hospital_Integration.Hospital_System.controller;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,20 +24,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import Hospital_Integration.Hospital_System.dto.DoctorDto;
+import Hospital_Integration.Hospital_System.model.DoctorModel;
+import Hospital_Integration.Hospital_System.model.HospitalModel;
+import Hospital_Integration.Hospital_System.repository.DoctorRepo;
 import Hospital_Integration.Hospital_System.services.DoctorService;
 
 @RestController
 @RequestMapping("/doctor")
 public class DoctorController {
 	
+//	@Autowired
+//	private AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 	private final DoctorService doctorService;
-//    private final PasswordEncoder passwordEncoder;
 //    private final AuthenticationManager authenticationManager;
     
 
-    public DoctorController(DoctorService doctorService) {
+    public DoctorController(DoctorService doctorService, PasswordEncoder passwordEncoder) {
         this.doctorService = doctorService;
-//		this.passwordEncoder = passwordEncoder;
+		this.passwordEncoder = passwordEncoder;
 //		this.authenticationManager = authenticationManager;
     }
     
@@ -79,5 +91,16 @@ public class DoctorController {
         return new RedirectView("/doctor/login?error=true");
     }
     
-   
+    @GetMapping("/findDoctor-ByHospitalId")
+    public ResponseEntity<List<DoctorModel>> getDoctorByHospitalId(@RequestParam("hospitalId") int hospitalId) {
+    	System.out.println("hello i am from this id "+hospitalId);
+        try {
+            List<DoctorModel> doctors = doctorService.findDoctorsByHospitalId(hospitalId);
+            System.out.println("hello i am from this id "+doctors.toString());
+            return ResponseEntity.ok(doctors); 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }

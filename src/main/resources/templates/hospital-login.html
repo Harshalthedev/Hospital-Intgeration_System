@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
+    <title>Hospital Login</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #000;
+            font-family: Arial, sans-serif;             
+            background-image: url("background.png");             
+            background-repeat: no-repeat;             
+            background-size: cover;
+            background-attachment: fixed;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
+            color: #0f0e0e;
         }
 
         .login-container {
-            background: #1a1a1a;
-            border-radius: 10px;
+            border: 1px solid black;
+			border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             padding: 30px;
             width: 100%;
@@ -39,9 +42,9 @@
 
         h1 {
             text-align: center;
-            color: rgb(255, 255, 255);
+			color: #033b49;
             margin-bottom: 10px;
-            font-size: 28px;
+            font-size: 29px;
         }
 
 
@@ -52,21 +55,21 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #ccc;
+            color: #0a0909;
             font-weight: bold;
         }
 
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 14px;
-            background: #222;
-            color: #fff;
-            transition: border-color 0.3s, box-shadow 0.3s;
+		    padding: 12px;
+		    border: 1px solid #080808;
+		    border-radius: 5px;
+		    box-sizing: border-box;
+		    font-size: 14px;
+		    background: #e7dcdc;
+		    color: #070606;
+		    transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         input[type="email"]:focus,
@@ -144,19 +147,17 @@
         <div th:if="${param.error}" class="error">
             Invalid email or password. Please try again.
         </div>
-		<form th:action="@{/hospital/login}" method="post">
-		    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-		    <div class="form-group">
-		        <label for="username">Email:</label>
-		        <input type="email" id="username" name="username" required placeholder="Enter your email" />
-		    </div>
-		    <div class="form-group">
-		        <label for="password">Password:</label>
-		        <input type="password" id="password" name="password" required placeholder="Enter your password" />
-		    </div>
-		    <button type="submit" class="btn">Login</button>
-		</form>
-
+        <form th:action="@{/hospital/login}" method="post">
+            <div class="form-group">
+                <label for="username">Email:</label>
+                <input type="email" id="username" name="username" required placeholder="Enter your email" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password" />
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
         <div class="signup-link">
             <p>Don’t have an account? <a th:href="@{/hospital/signup}">Sign up here</a>.</p>
         </div>

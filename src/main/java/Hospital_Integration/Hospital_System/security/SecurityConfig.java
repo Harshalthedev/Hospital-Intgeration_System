@@ -44,34 +44,49 @@ public class SecurityConfig {
     }
 
     @SuppressWarnings("removal")
-	@Bean
+    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Use cookie CSRF token repository
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             )
             .authorizeRequests(authorize -> authorize
-                .requestMatchers("/index","/doctor-login","/login","/signup", "/reset-password", "/security-question", "/update-password"
-                		,"/hospital/login", "/hospital/signup","/doctor/dashboard","/dashboard","/hospital/dashboard").permitAll()
-//                .requestMatchers("/dashboard", "/hospital/dashboard").authenticated()
+                .requestMatchers(
+                    "/index", 
+                    "/doctor-login", 
+                    "/login", 
+                    "/signup", 
+                    "/reset-password", 
+                    "/security-question", 
+                    "/update-password", 
+                    "/hospital/login", 
+                    "/hospital/signup",
+                    "/doctor/signup",
+                    "/doctor/login"  
+                ).permitAll()
+                .requestMatchers(
+                   "/dashboard", 
+                   "/hospital/dashboard",	
+                    "/doctor/dashboard"
+                    ).authenticated()
             )
             .formLogin(form -> form                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                    .loginPage("/index")
+                    .loginPage("/login")
                     .defaultSuccessUrl("/dashboard", true)
                     .failureUrl("/login?error=true")
-                )
+                ) 
             .logout(logout -> logout
-                .logoutUrl("/logout") // The URL for logging out
-                .logoutSuccessUrl("/login?logout=true") // Redirect after successful logout
-                .invalidateHttpSession(true) // Invalidate the HTTP session
-                .deleteCookies("JSESSIONID") // Delete the session cookie
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
             );
 
         return http.build();
     }
 
     @Bean
-     AuthenticationManager authManager(HttpSecurity http) throws Exception {
+    AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = 
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(authenticationProvider());

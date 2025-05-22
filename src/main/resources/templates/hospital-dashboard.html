@@ -1,10 +1,342 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Hospital Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    .container {
+      display: flex;
+      height: 80.6vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #1e272e;
+      color: white;
+      transition: width 0.3s;
+      overflow: hidden;
+    }
+
+    .sidebar.collapsed {
+      width: 60px;
+    }
+
+    .sidebar button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      width: 100%;
+      border: none;
+      background: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .sidebar button:hover {
+      background: #485460;
+    }
+
+    .sidebar.collapsed button span {
+      display: none;
+    }
+
+    .toggle-btn {
+      background: #1abc9c;
+      font-weight: bold;
+    }
+
+    .main {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background: #ffffff;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      padding: 1rem;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .hospital-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .hospital-card {
+      background: #ecf0f1;
+      padding: 1rem;
+      border-radius: 8px;
+      width: 200px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container {
+      max-width: 400px;
+      background: #f7f7f7;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #1abc9c;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #16a085;
+    }
+
+    footer {
+    background: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    }
+
+  </style>
 </head>
+
 <body>
-    <h1>Hello World from Hospital</h1>
+  <header>🏥 City-wide Hospital Integration Dashboard</header>
+
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+      <button class="toggle-btn" onclick="toggleSidebar()">☰ <span>Toggle</span></button>
+      <button onclick="showTab('home')">🏠 <span>Home</span></button>
+      <button onclick="showTab('hospitals')">🏥 <span>All Hospitals</span></button>
+      <button onclick="showTab('doctors')">👨‍⚕️ <span>Doctors</span></button>
+      <button onclick="showTab('users')">👤 <span>Users</span></button>
+      <button onclick="showTab('refer')">🔄 <span>Refer Patient</span></button>
+      <button onclick="showTab('register')">📝 <span>Register Patient</span></button>
+      <button onclick="logout()">🚪 <span>Logout</span></button>
+    </div>
+
+    <div class="main" id="content">
+      <!-- Content loads here -->
+    </div>
+  </div>
+
+  <footer style="background: #2c3e50; color: white; text-align: center; padding: 1rem; position: relative;">
+    <p>&copy; 2025 City-wide Hospital Integration Dashboard | All rights reserved.</p>
+  </footer>
+
+
+  <script>
+	// Fetch the CSRF token from meta tags
+ 	//const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const hospitals = [
+      { id: 1, name: "General Hospital", beds: 20, availableBeds: 5 },
+      { id: 2, name: "City Clinic", beds: 10, availableBeds: 2 },
+      { id: 3, name: "Metro Care", beds: 30, availableBeds: 10 }
+    ];
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("collapsed");
+    }
+
+    function logout() {
+      alert("Logged out!");
+    }
+
+    function showTab(tab) {
+      const content = document.getElementById("content");
+      content.innerHTML = "";
+
+      if (tab === "home") {
+        const totalPatients = 125;
+        const totalDoctors = 25;
+        const totalBeds = hospitals.reduce((sum, h) => sum + h.beds, 0);
+        const availableBeds = hospitals.reduce((sum, h) => sum + h.availableBeds, 0);
+        const occupiedBeds = totalBeds - availableBeds;
+
+        content.innerHTML = `
+          <h2>🏠 Home Dashboard</h2>
+          <div class="card-grid">
+            <div class="card" style="background:#3498db;" onclick="showTab('register')">
+              <h3>Total Patients</h3><p>${totalPatients}</p>
+            </div>
+            <div class="card" style="background:#2ecc71;" onclick="showTab('doctors')">
+              <h3>Total Doctors</h3><p>${totalDoctors}</p>
+            </div>
+            <div class="card" style="background:#9b59b6;" onclick="showTab('hospitals')">
+              <h3>Total Beds</h3><p>${totalBeds}</p>
+            </div>
+            <div class="card" style="background:#f39c12;" onclick="showTab('hospitals')">
+              <h3>Available Beds</h3><p>${availableBeds}</p>
+            </div>
+            <div class="card" style="background:#e74c3c;" onclick="showTab('hospitals')">
+              <h3>Occupied Beds</h3><p>${occupiedBeds}</p>
+            </div>
+            <div class="card" style="background:#34495e;" onclick="showTab('register')">
+              <h3>Book Appointment</h3><p>Click to Register</p>
+            </div>
+            <div class="card" style="background:#7f8c8d;" onclick="showTab('users')">
+              <h3>Patient Detail</h3><p>Click to View</p>
+            </div>
+          </div>`;
+      }
+
+      if (tab === "hospitals") {
+        const hospitalList = document.createElement("div");
+        hospitalList.className = "hospital-list";
+        hospitals.forEach(hospital => {
+          const card = document.createElement("div");
+          card.className = "hospital-card";
+          card.innerHTML = `<h3>${hospital.name}</h3>
+              <p>Total Beds: ${hospital.beds}</p>
+              <p>Available: ${hospital.availableBeds}</p>`;
+          hospitalList.appendChild(card);
+        });
+        content.append(hospitalList);
+      }
+
+      if (tab === "doctors") {
+		
+		fetchRoomList();
+		
+      }
+
+      if (tab === "users") {
+        content.innerHTML = `<h2>👤 Users</h2><p>Feature under development...</p>`;
+      }
+
+      if (tab === "refer") {
+        content.innerHTML = `
+          <div class="form-container">
+            <h2>Refer Patient</h2>
+            <div class="form-group">
+              <label>Patient Name</label>
+              <input type="text" placeholder="Enter patient name">
+            </div>
+            <div class="form-group">
+              <label>Select Hospital</label>
+              <select>${hospitals.map(h => `<option>${h.name}</option>`).join("")}</select>
+            </div>
+            <button onclick="alert('Patient referred!')">Refer</button>
+          </div>`;
+      }
+
+      if (tab === "register") {
+        content.innerHTML = `
+          <div class="form-container">
+            <h2>Register New Patient</h2>
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" placeholder="Enter full name">
+            </div>
+            <div class="form-group">
+              <label>Age</label>
+              <input type="number" placeholder="Enter age">
+            </div>
+            <div class="form-group">
+              <label>Hospital</label>
+              <select>${hospitals.map(h => `<option>${h.name}</option>`).join("")}</select>
+            </div>
+            <button onclick="alert('Patient registered!')">Register</button>
+          </div>`;
+      }
+    }
+
+	
+	// Function to fetch the doctor list
+	async function fetchRoomList() {
+	   const hospitalId = localStorage.getItem('hospitalId');
+	   if (!hospitalId) {
+	     alert('Hospital ID not found.');
+	   }
+	
+	   const content = document.getElementById("content");
+	   content.innerHTML = `<h2>👨‍⚕️ Doctors</h2><div id="doctor-list" class="hospital-list"></div>`;
+	   const doctorList = document.getElementById("doctor-list");
+	
+	   try {
+	     const response = await fetch(`/doctor/findDoctor-ByHospitalId?hospitalId=${encodeURIComponent(hospitalId)}`);
+	     if (!response.ok) throw new Error('Failed to fetch doctors');
+	
+	     const doctors = await response.json();
+	     if (!doctors.length) {
+	       doctorList.innerHTML = `<p>No doctors found for this hospital.</p>`;
+	       return;
+	     }
+	
+	     doctors.forEach((doc) => {
+	       const card = document.createElement("div");
+	       card.className = "hospital-card";
+	       card.innerHTML = `
+	         <h3>Dr. ${doc.displayName}</h3>
+	         <p>Specialization: ${doc.specialization || 'N/A'}</p>
+	         <p>Email: ${doc.email || 'N/A'}</p>
+	         <p>Hospital Id: ${doc.hospitalId || 'N/A'}</p>
+	       `;
+	       doctorList.appendChild(card);
+	     });
+	
+	   } catch (error) {
+	     console.error('Error fetching doctors:', error);
+	     doctorList.innerHTML = `<p>Error loading doctors. Please try again later.</p>`;
+	   }
+	 }
+	 
+	 showTab("home")
+  </script>
 </body>
 </html>

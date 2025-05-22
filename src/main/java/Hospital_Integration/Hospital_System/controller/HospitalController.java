@@ -1,9 +1,14 @@
 package Hospital_Integration.Hospital_System.controller;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import Hospital_Integration.Hospital_System.dto.HospitalDto;
+import Hospital_Integration.Hospital_System.model.HospitalModel;
+import Hospital_Integration.Hospital_System.repository.HospitalRepo;
 import Hospital_Integration.Hospital_System.services.HospitalService;
 
 
@@ -27,12 +34,11 @@ public class HospitalController {
 	private final HospitalService hospitalService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    
 
     public HospitalController(HospitalService hospitalService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.hospitalService = hospitalService;
-        this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
     }
     
     @GetMapping("/signup")
@@ -48,8 +54,24 @@ public class HospitalController {
     @GetMapping("/dashboard")
     public ModelAndView showDashboardPage() {
         return new ModelAndView("hospital-dashboard");
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String displayUserName = hospitalService.findByEmail(authentication.getName()).getDisplayName();
+//
+//        ModelAndView modelAndView = new ModelAndView("hospital-dashboard");
+//        modelAndView.addObject("displayUserName", displayUserName);
+//        return modelAndView;
     }
- 
+    
+    @GetMapping("/available-hospitals")
+    public ResponseEntity<List<HospitalModel>> getRoomsForCurrentUser() {
+        try {
+            List<HospitalModel> hospitals = hospitalService.getAllAvailableHospitals();
+            return ResponseEntity.ok(hospitals); 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+    
     @PostMapping("/signup")
     public RedirectView registerHospital(@ModelAttribute HospitalDto hospitalDto, RedirectAttributes redirectAttributes) {
         try {
@@ -63,9 +85,7 @@ public class HospitalController {
     }
     
     @PostMapping("/login")
-    public RedirectView login(@RequestParam String username, @RequestParam String password) {
-        System.out.println("i am in hospital");
-        
+    public RedirectView login(@RequestParam String username, @RequestParam String password) { 
 
     	try {
             boolean hospitalAuth = hospitalService.loginHospital(username, password);
@@ -82,6 +102,5 @@ public class HospitalController {
         }
         return new RedirectView("/hospital/login?error=true");
     }
-    
    
 }

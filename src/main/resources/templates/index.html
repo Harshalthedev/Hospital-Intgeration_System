@@ -7,13 +7,63 @@
     <title>Home</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif;             
+            background-image: url("background.png");             
+            background-repeat: no-repeat;             
+            background-size: cover;
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
             flex-direction: column;
+        }
+        .line-with-bullets {             
+            display: flex;             
+            align-items: center;             
+            justify-content: center;             
+            width: 90%;             
+        }          
+        .bullet {             
+            width: 12px;             
+            height: 12px;             
+            background-color: #87CEEB;            
+            border-radius: 50%;             
+            margin: 0 10px;         
+        }          
+        .line {             
+            flex-grow: 1;             
+            height: 1px;             
+            background: linear-gradient(to right, #87CEEB, white);         
+        }
+        .intro-container {
+            text-align: center;
+            max-width: 900px;
+            padding: 20px;
+            margin-left: 3%;
+        }
+        .heading {
+            font-size: 36px;
+            font-weight: bold;
+            color: black;
+            margin-bottom: 12px;
+        }
+        .highlight {
+            background: linear-gradient(to right, #87CEEB, #023263);
+            color: white;
+            padding: 2px 15px;
+            border-radius: 20px;
+        }
+        .content p {
+            font-size: 14px;
+            color: black;
+            font-weight: normal;
+            padding-top: 0%;
+            line-height: 1.6;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .container {
             text-align: center;
@@ -35,22 +85,56 @@
         }
         .card:hover {
             transform: scale(1.05);
+            animation: gradientShift 3s ease infinite;
         }
         button {
+            width: 100px;
             margin-top: 10px;
             padding: 10px;
+            font-size: 18px;
             border: none;
-            background-color: #007BFF;
+            background-color: #1e1e20;
             color: white;
             border-radius: 5px;
             cursor: pointer;
         }
+        button a{
+            color: white;
+            text-decoration: none; 
+        }
         button:hover {
-            background-color: #0056b3;
+            background-color: #010107;
+        }
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+                background: linear-gradient(to right, #87CEEB, white);
+            }
+            50% {
+                background-position: 100% 50%;
+                background: linear-gradient(to right, #ADD8E6, #ffffff);
+            }
+            100% {
+                background-position: 0% 50%;
+                background: linear-gradient(to right, #87CEEB, white);
+            }
         }
     </style>
 </head>
 <body>
+    <div class="intro-container">
+        <div class="heading">Say Goodbye to Hospital Hassles,</div>
+        <div class="heading">Access Quality <span class="highlight">Healthcare</span> Anytime, Anywhere!</div>
+    </div>    
+    <!-- Content Section -->
+    <div class="content">
+        <p>Our Hospital Integration System brings multiple hospitals onto a single platform, making healthcare more accessible and efficient. Whether it's checking bed availability, booking appointments, or managing OPD queues, our user-friendly system ensures seamless communication between patients, doctors, and hospital staff.</p>
+    </div>
+    <div class="line-with-bullets">         
+        <div class="bullet"></div>         
+        <div class="line"></div>         
+        <div class="bullet"></div>    
+    </div>
     <div class="container">
         <h1>Login Portal</h1>
         <div class="card-container">

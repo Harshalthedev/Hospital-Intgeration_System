@@ -1,9 +1,12 @@
 package Hospital_Integration.Hospital_System.controller;
 
+import java.util.Collections;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import Hospital_Integration.Hospital_System.dto.UserDto;
+import Hospital_Integration.Hospital_System.model.HospitalModel;
 import Hospital_Integration.Hospital_System.model.UserModel;
+import Hospital_Integration.Hospital_System.repository.UserRepo;
 import Hospital_Integration.Hospital_System.services.UserService;
 import jakarta.servlet.http.HttpSession;
 
@@ -28,6 +33,7 @@ public class UserController {
 
 
     private final UserService userService;
+    private UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
@@ -103,6 +109,25 @@ public class UserController {
         }
     }
 
+//    @PostMapping("/login")
+//    public RedirectView login(@RequestParam String username, @RequestParam String password) {
+//        try {
+//            Authentication auth = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(username, password)
+//            );
+//
+//            if (auth.isAuthenticated()) {
+//                return new RedirectView("/dashboard");
+//            }
+//        } catch (AuthenticationException e) {
+//        	
+//            RedirectView redirectView = new RedirectView("/login");
+//            redirectView.addStaticAttribute("error", true);
+//            return redirectView;
+//        }
+//        return new RedirectView("/login?error=true");
+//    }
+    
     @PostMapping("/login")
     public RedirectView login(@RequestParam String username, @RequestParam String password) {
         try {
