@@ -82,10 +82,18 @@ public class UserController {
     }
 
     @GetMapping("/dashboard")
-    public ModelAndView showDashboardPage() {
+    public ModelAndView showDashboardPage(HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String displayUserName = userService.findByEmail(authentication.getName()).getDisplayName();
-
+        String userEmail = userService.findByEmail(authentication.getName()).getEmail();
+        String userAge = String.valueOf(userService.findByEmail(authentication.getName()).getAge());
+        String userGender = userService.findByEmail(authentication.getName()).getGender();
+        
+        session.setAttribute("displayUserName", displayUserName);
+        session.setAttribute("userEmail", userEmail);
+        session.setAttribute("userAge", userAge);
+        session.setAttribute("userGender", userGender);
+        
         ModelAndView modelAndView = new ModelAndView("dashboard");
         modelAndView.addObject("displayUserName", displayUserName);
         return modelAndView;
@@ -100,7 +108,7 @@ public class UserController {
     @PostMapping("/signup")
     public RedirectView registerUser(@ModelAttribute UserDto userDTO, RedirectAttributes redirectAttributes) {
         try {
-            userService.registerUser(userDTO.getEmail(), userDTO.getPassword(), userDTO.getDisplayName(), userDTO.getSecurityQuestion1(), userDTO.getSecurityQuestion2());
+            userService.registerUser(userDTO.getEmail(), userDTO.getPassword(), userDTO.getDisplayName(), userDTO.getSecurityQuestion1(), userDTO.getSecurityQuestion2(), userDTO.getAge(), userDTO.getGender());
             redirectAttributes.addFlashAttribute("successMessage", "User registered successfully! Please log in.");
             return new RedirectView("/login");
         } catch (RuntimeException e) {

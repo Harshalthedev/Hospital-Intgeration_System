@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,9 +92,8 @@ public class DoctorController {
         return new RedirectView("/doctor/login?error=true");
     }
     
-    @GetMapping("/findDoctor-ByHospitalId")
-    public ResponseEntity<List<DoctorModel>> getDoctorByHospitalId(@RequestParam("hospitalId") int hospitalId) {
-    	System.out.println("hello i am from this id "+hospitalId);
+    @GetMapping("/findDoctor-ByHospitalId/{hospitalId}")
+    public ResponseEntity<List<DoctorModel>> getDoctorByHospitalId(@PathVariable int hospitalId) {
         try {
             List<DoctorModel> doctors = doctorService.findDoctorsByHospitalId(hospitalId);
             System.out.println("hello i am from this id "+doctors.toString());

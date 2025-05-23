@@ -1,6 +1,8 @@
 package Hospital_Integration.Hospital_System.model;
 
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +29,7 @@ public class DoctorModel {
     
     @Column(unique = true, nullable = false)
     private int hospitalId;
+    
     
     @Column(name = "specialization", nullable = false)
     private String specialization;

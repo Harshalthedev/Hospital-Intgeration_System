@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Hospital Dashboard</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
+      background-color: #f5f7fa;
     }
 
     header {
@@ -24,165 +20,155 @@
 
     .container {
       display: flex;
-      height: 80.6vh;
+      min-height: calc(100vh - 120px);
     }
 
     .sidebar {
-      width: 250px;
-      background: #1e272e;
+      background: #34495e;
       color: white;
-      transition: width 0.3s;
-      overflow: hidden;
-    }
-
-    .sidebar.collapsed {
-      width: 60px;
+      width: 220px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
     .sidebar button {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      width: 100%;
-      border: none;
       background: none;
+      border: none;
       color: white;
-      font-size: 16px;
+      text-align: left;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.2s ease;
     }
 
     .sidebar button:hover {
-      background: #485460;
-    }
-
-    .sidebar.collapsed button span {
-      display: none;
-    }
-
-    .toggle-btn {
-      background: #1abc9c;
-      font-weight: bold;
+      background: #3d566e;
     }
 
     .main {
       flex: 1;
-      padding: 1.5rem;
-      overflow-y: auto;
+      padding: 1rem;
       background: #ffffff;
+      overflow-y: auto;
     }
 
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
     }
 
     .card {
       padding: 1rem;
-      border-radius: 10px;
       color: white;
+      border-radius: 8px;
       cursor: pointer;
       transition: transform 0.2s;
     }
 
     .card:hover {
-      transform: scale(1.03);
-    }
-
-    .hospital-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .hospital-card {
-      background: #ecf0f1;
-      padding: 1rem;
-      border-radius: 8px;
-      width: 200px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transform: scale(1.02);
     }
 
     .form-container {
-      max-width: 400px;
-      background: #f7f7f7;
+      max-width: 500px;
+      margin: 0 auto;
+      background: #ecf0f1;
       padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
 
     .form-group {
       margin-bottom: 1rem;
     }
 
-    label {
+    .form-group label {
       display: block;
-      margin-bottom: 0.4rem;
-      font-weight: bold;
+      margin-bottom: 0.5rem;
     }
 
-    input, select, button {
+    .form-group input,
+    .form-group select {
       width: 100%;
-      padding: 10px;
-      border-radius: 5px;
+      padding: 0.5rem;
       border: 1px solid #ccc;
+      border-radius: 4px;
     }
 
     button {
-      background: #1abc9c;
+      background-color: #3498db;
       color: white;
       border: none;
-      font-weight: bold;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
     button:hover {
-      background: #16a085;
+      background-color: #2980b9;
+    }
+
+    .hospital-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .room-item {
+      background: #f0f0f0;
+      margin-bottom: 0.5rem;
+      padding: 0.75rem;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hospital-card {
+      background: #ecf0f1;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
     }
 
     footer {
-    background: #2c3e50;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 1rem;
     }
-
   </style>
 </head>
-
 <body>
   <header>🏥 City-wide Hospital Integration Dashboard</header>
+  <div id="data-holder" th:attr="data-hospital-id=${hospitalId}"></div>
 
   <div class="container">
     <div class="sidebar" id="sidebar">
-      <button class="toggle-btn" onclick="toggleSidebar()">☰ <span>Toggle</span></button>
-      <button onclick="showTab('home')">🏠 <span>Home</span></button>
-      <button onclick="showTab('hospitals')">🏥 <span>All Hospitals</span></button>
-      <button onclick="showTab('doctors')">👨‍⚕️ <span>Doctors</span></button>
-      <button onclick="showTab('users')">👤 <span>Users</span></button>
-      <button onclick="showTab('refer')">🔄 <span>Refer Patient</span></button>
-      <button onclick="showTab('register')">📝 <span>Register Patient</span></button>
-      <button onclick="logout()">🚪 <span>Logout</span></button>
+      <button onclick="showTab('home')">🏠 Home</button>
+      <button onclick="showTab('hospitals')">🏥 All Hospitals</button>
+      <button onclick="showTab('doctors')">👨‍⚕️ Doctors</button>
+      <button onclick="showTab('users')">👤 Users</button>
+      <button onclick="showTab('refer')">🔄 Refer Patient</button>
+      <button onclick="showTab('register')">📝 Register Patient</button>
+      <button onclick="logout()">🚪 Logout</button>
     </div>
 
     <div class="main" id="content">
-      <!-- Content loads here -->
+      <!-- Dynamic content loads here -->
     </div>
   </div>
 
-  <footer style="background: #2c3e50; color: white; text-align: center; padding: 1rem; position: relative;">
+  <footer>
     <p>&copy; 2025 City-wide Hospital Integration Dashboard | All rights reserved.</p>
   </footer>
 
-
-  <script>
-	// Fetch the CSRF token from meta tags
- 	//const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+  <!-- The JavaScript from your previous version stays unchanged -->
+  <!-- Ensure this script block contains all your dynamic tab and fetch logic -->
+  <script th:inline="javascript">
     const hospitals = [
       { id: 1, name: "General Hospital", beds: 20, availableBeds: 5 },
       { id: 2, name: "City Clinic", beds: 10, availableBeds: 2 },
@@ -236,23 +222,52 @@
       }
 
       if (tab === "hospitals") {
-        const hospitalList = document.createElement("div");
-        hospitalList.className = "hospital-list";
-        hospitals.forEach(hospital => {
-          const card = document.createElement("div");
-          card.className = "hospital-card";
-          card.innerHTML = `<h3>${hospital.name}</h3>
-              <p>Total Beds: ${hospital.beds}</p>
-              <p>Available: ${hospital.availableBeds}</p>`;
-          hospitalList.appendChild(card);
-        });
-        content.append(hospitalList);
+        const content = document.getElementById("content");
+        content.innerHTML = `
+          <h2>🏥 All Hospitals</h2>
+          <ul id="hospital-list" class="hospital-list"></ul>
+        `;
+
+        async function fetchHospitalList() {
+		const currentHospitalId = document.getElementById("data-holder").dataset.hospitalId;
+
+          try {
+            const response = await fetch('/hospital/available-hospitals');
+            if (!response.ok) throw new Error('Failed to fetch hospitals');
+
+            const hospitals = await response.json();
+            const hospitalList = document.getElementById('hospital-list');
+            hospitalList.innerHTML = '';
+
+            hospitals.forEach((hospital) => {
+				if (hospital.hospitalId != currentHospitalId) {
+	              const hospitalItem = document.createElement('li');
+	              hospitalItem.className = 'room-item';
+	              hospitalItem.innerHTML = `
+	                <span>${hospital.displayName}</span>
+	                <div class="room-actions">
+	                  <button onclick="showRoomPage('${hospital.hospitalId}')">Show Details</button>
+	                </div>
+	              `;
+	              hospitalList.appendChild(hospitalItem);
+	            }
+			}
+			);
+          } catch (error) {
+            console.error('Error fetching hospitals:', error);
+            alert('Could not load hospitals. Please try again later.');
+          }
+        }
+
+        function showRoomPage(hospitalId) {
+          window.location.href = `/hospital/details/${hospitalId}`;
+        }
+
+        fetchHospitalList();
       }
 
       if (tab === "doctors") {
-		
-		fetchRoomList();
-		
+        fetchDoctorList();
       }
 
       if (tab === "users") {
@@ -260,19 +275,51 @@
       }
 
       if (tab === "refer") {
+        const content = document.getElementById("content");
         content.innerHTML = `
           <div class="form-container">
             <h2>Refer Patient</h2>
             <div class="form-group">
               <label>Patient Name</label>
-              <input type="text" placeholder="Enter patient name">
+              <input type="text" id="refer-patient-name" placeholder="Enter patient name">
+            </div>
+            <div class="form-group">
+              <label>Email ID</label>
+              <input type="email" id="refer-patient-email" placeholder="Enter patient email">
+            </div>
+            <div class="form-group">
+              <label>Disease / Department</label>
+              <select id="refer-disease">
+                <option value="">Select</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Dermatology">Dermatology</option>
+              </select>
             </div>
             <div class="form-group">
               <label>Select Hospital</label>
-              <select>${hospitals.map(h => `<option>${h.name}</option>`).join("")}</select>
+              <select id="hospital-select">
+                <option>Loading hospitals...</option>
+              </select>
             </div>
-            <button onclick="alert('Patient referred!')">Refer</button>
-          </div>`;
+            <button onclick="referPatient()">Refer</button>
+          </div>
+        `;
+
+        fetch('/hospital/available-hospitals')
+          .then(response => {
+            if (!response.ok) throw new Error("Failed to fetch hospitals");
+            return response.json();
+          })
+          .then(hospitals => {
+            const select = document.getElementById("hospital-select");
+            select.innerHTML = hospitals.map(h => `<option value="${h.hospitalId}">${h.displayName}</option>`).join('');
+          })
+          .catch(error => {
+            console.error("Error loading hospitals:", error);
+            document.getElementById("hospital-select").innerHTML = `<option disabled>Error loading hospitals</option>`;
+          });
       }
 
       if (tab === "register") {
@@ -296,47 +343,61 @@
       }
     }
 
-	
-	// Function to fetch the doctor list
-	async function fetchRoomList() {
-	   const hospitalId = localStorage.getItem('hospitalId');
-	   if (!hospitalId) {
-	     alert('Hospital ID not found.');
-	   }
-	
-	   const content = document.getElementById("content");
-	   content.innerHTML = `<h2>👨‍⚕️ Doctors</h2><div id="doctor-list" class="hospital-list"></div>`;
-	   const doctorList = document.getElementById("doctor-list");
-	
-	   try {
-	     const response = await fetch(`/doctor/findDoctor-ByHospitalId?hospitalId=${encodeURIComponent(hospitalId)}`);
-	     if (!response.ok) throw new Error('Failed to fetch doctors');
-	
-	     const doctors = await response.json();
-	     if (!doctors.length) {
-	       doctorList.innerHTML = `<p>No doctors found for this hospital.</p>`;
-	       return;
-	     }
-	
-	     doctors.forEach((doc) => {
-	       const card = document.createElement("div");
-	       card.className = "hospital-card";
-	       card.innerHTML = `
-	         <h3>Dr. ${doc.displayName}</h3>
-	         <p>Specialization: ${doc.specialization || 'N/A'}</p>
-	         <p>Email: ${doc.email || 'N/A'}</p>
-	         <p>Hospital Id: ${doc.hospitalId || 'N/A'}</p>
-	       `;
-	       doctorList.appendChild(card);
-	     });
-	
-	   } catch (error) {
-	     console.error('Error fetching doctors:', error);
-	     doctorList.innerHTML = `<p>Error loading doctors. Please try again later.</p>`;
-	   }
-	 }
-	 
-	 showTab("home")
+    async function fetchDoctorList() {
+      const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
+
+      if (!hospitalId) {
+        alert('Hospital ID not found.');
+        return;
+      }
+
+      const content = document.getElementById("content");
+      content.innerHTML = `<h2>👨‍⚕️ Doctors</h2><div id="doctor-list" class="hospital-list"></div>`;
+      const doctorList = document.getElementById("doctor-list");
+
+      try {
+        const response = await fetch(`/doctor/findDoctor-ByHospitalId/${hospitalId}`);
+        if (!response.ok) throw new Error('Failed to fetch doctors');
+
+        const doctors = await response.json();
+        if (!doctors.length) {
+          doctorList.innerHTML = `<p>No doctors found for this hospital.</p>`;
+          return;
+        }
+
+        doctors.forEach((doc) => {
+          const card = document.createElement("div");
+          card.className = "hospital-card";
+          card.innerHTML = `
+            <h3>Dr. ${doc.displayName}</h3>
+            <p>Specialization: ${doc.specialization || 'N/A'}</p>
+            <p>Email: ${doc.email || 'N/A'}</p>
+            <p>Hospital Id: ${doc.hospitalId || 'N/A'}</p>
+          `;
+          doctorList.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+        doctorList.innerHTML = `<p>Error loading doctors. Please try again later.</p>`;
+      }
+    }
+
+    function referPatient() {
+      const name = document.getElementById("refer-patient-name").value;
+      const email = document.getElementById("refer-patient-email").value;
+      const disease = document.getElementById("refer-disease").value;
+      const hospitalId = document.getElementById("hospital-select").value;
+
+      if (!name || !email || !disease || !hospitalId) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      alert(`Patient \"${name}\" (${email}) with \"${disease}\" referred to hospital ID ${hospitalId}!`);
+    }
+
+    showTab("home");
   </script>
 </body>
 </html>

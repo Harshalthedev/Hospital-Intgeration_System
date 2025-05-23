@@ -1,10 +1,107 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doctor Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    .dashboard {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    }
+    .appointment {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #eef2f7;
+      border-radius: 8px;
+    }
+    button {
+      margin-left: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .accept {
+      background-color: #38a169;
+      color: white;
+    }
+    .decline {
+      background-color: #e53e3e;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-    <h1>Hello World from Doctor</h1>
+
+<div class="dashboard">
+  <h2>Doctor Dashboard</h2>
+  <p><strong>Name:</strong> <span id="doctor-name">Loading...</span></p>
+  <p><strong>Hospital:</strong> <span id="hospital-name">Loading...</span></p>
+
+  <h3>Appointments</h3>
+  <div id="appointment-list">Loading appointments...</div>
+
+  <h4>Patients Waiting: <span id="queue-count">0</span></h4>
+</div>
+
+<script>
+  async function loadDashboard() {
+    try {
+      const res = await fetch('/api/dashboard');
+      const data = await res.json();
+
+      document.getElementById('doctor-name').textContent = data.doctor.name;
+      document.getElementById('hospital-name').textContent = data.doctor.hospital;
+
+      const list = document.getElementById('appointment-list');
+      list.innerHTML = '';
+      data.appointments.forEach(appt => {
+        const item = document.createElement('div');
+        item.className = 'appointment';
+        item.innerHTML = `
+          <div>
+            <strong>${appt.patient}</strong><br>
+            <small>${appt.time}</small>
+          </div>
+          <div>
+            <button class="accept" onclick="handleReply(${appt.id}, 'accept')">Accept</button>
+            <button class="decline" onclick="handleReply(${appt.id}, 'decline')">Decline</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+
+      document.getElementById('queue-count').textContent = data.appointments.length;
+    } catch (err) {
+      console.error('Error loading dashboard:', err);
+    }
+  }
+
+  async function handleReply(id, action) {
+    try {
+      await fetch(`/api/appointment/${id}/${action}`, { method: 'POST' });
+      loadDashboard(); // Refresh list
+    } catch (err) {
+      alert('Failed to update appointment');
+      console.error(err);
+    }
+  }
+
+  window.onload = loadDashboard;
+</script>
+
 </body>
 </html>

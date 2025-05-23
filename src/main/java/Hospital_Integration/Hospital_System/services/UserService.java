@@ -18,14 +18,14 @@ public class UserService {
     }
 
     // Method to register a new user
-    public UserModel registerUser(String email, String password, String displayName, String securityQuestion1, String securityQuestion2) {
+    public UserModel registerUser(String email, String password, String displayName, String securityQuestion1, String securityQuestion2, int age, String gender) {
         if (userRepository.findByEmail(email) != null) {
             throw new RuntimeException("User with email " + email + " already exists");
         }
         
         String encodedPassword = passwordEncoder.encode(password);
 
-        UserModel user = new UserModel(email, encodedPassword, displayName, securityQuestion1, securityQuestion2);
+        UserModel user = new UserModel(email, encodedPassword, displayName, securityQuestion1, securityQuestion2, age, gender);
         return userRepository.save(user);
     }
 

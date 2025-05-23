@@ -1,192 +1,196 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Sign Up</title>
-    <style>
-		body {
-		            font-family: Arial, sans-serif;             
-		            background-image: url("background.png");             
-		            background-repeat: no-repeat;             
-		            background-size: cover;
-		            background-attachment: fixed;
-		            margin: 0;
-		            padding: 0;
-		            display: flex;
-		            justify-content: center;
-		            align-items: center;
-		            height: 100vh;
-		            color: #fff;
-		        }
-		
-		        .signup-container {
-		            border: 1px solid black;
-					border-radius: 20px;
-		            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-		            margin-top: 13%;
-		            padding: 30px;
-		            width: 100%;
-		            max-width: 500px;
-		            box-sizing: border-box;
-		            animation: fadeIn 0.5s ease-in-out;
-		        }
-		
-		        @keyframes fadeIn {
-		            from {
-		                opacity: 0;
-		                transform: scale(0.9);
-		            }
-		            to {
-		                opacity: 1;
-		                transform: scale(1);
-		            }
-		        }
-		
-		        h2 {
-		            text-align: center;
-		            margin-bottom: 20px;
-		            color: #033b49;
-		            font-size: 29px;
-		            font-weight: bold;
-		        }
-		
-		        .form-group {
-		            margin-bottom: 20px;
-		        }
-		
-		        label {
-		            display: block;
-		            margin-bottom: 8px;
-		            color: #0f0e0e;
-		            font-weight: bold;
-		        }
-		
-		        input[type="email"],
-		        input[type="text"],
-		        input[type="password"] {
-		            width: 100%;
-				    padding: 12px;
-				    border: 1px solid #080808;
-				    border-radius: 5px;
-				    box-sizing: border-box;
-				    font-size: 14px;
-				    background: #e7dcdc;
-				    color: #070606;
-				    transition: border-color 0.3s, box-shadow 0.3s;
-		        }
-		
-		        input[type="email"]:focus,
-		        input[type="text"]:focus,
-		        input[type="password"]:focus {
-		            border-color: #007BFF;
-		            box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
-		            outline: none;
-		        }
-		
-		        button {
-		            width: 100%;
-		            padding: 12px;
-		            background: linear-gradient(135deg, #007BFF, #0056b3);
-		            color: white;
-		            border: none;
-		            border-radius: 5px;
-		            cursor: pointer;
-		            font-size: 16px;
-		            font-weight: bold;
-		            transition: background 0.3s ease-in-out;
-		        }
-		
-		        button:hover {
-		            background: linear-gradient(135deg, #0056b3, #003f7f);
-		        }
-		
-		        .error {
-		            color: #ff4d4d;
-		            margin-bottom: 15px;
-		            text-align: center;
-		            font-weight: bold;
-		        }
-		
-		        .login-link {
-		            text-align: center;
-		            margin-top: 15px;
-		            color: black;
-		        }
-		
-		        .login-link a {
-		            color: #007BFF;
-		            font-weight: bold;
-		            text-decoration: none;
-		            transition: color 0.3s;
-		        }
-		
-		        .login-link a:hover {
-		            text-decoration: underline;
-		            color: #0056b3;
-		        }
-		
-		        /* Responsive Design */
-		        @media (max-width: 480px) {
-		            .signup-container {
-		                padding: 20px;
-		                width: 90%;
-		            }
-		
-		            h2 {
-		                font-size: 20px;
-		            }
-		
-		            button {
-		                font-size: 14px;
-		            }
-		        }
-    </style>
+  <title>Sign Up</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .signup-container {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      padding: 30px;
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: #003f7f;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f9f9f9;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #007BFF;
+      outline: none;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .error {
+      color: #e60000;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #007BFF;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-height: 700px) {
+      .signup-container {
+        max-height: 85vh;
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="signup-container">
-        <h2>Create an Account</h2>
-        
-        <!-- Display signup errors if they exist -->
-        <div th:if="${errorMessage}" class="error">
-            <p th:text="${errorMessage}"></p>
-        </div>
-        
-        <form th:action="@{/signup}" method="post">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required placeholder="Enter your email" />
-            </div>
-            
-            <div class="form-group">
-                <label for="displayName">Display Name:</label>
-                <input type="text" id="displayName" name="displayName" required placeholder="Enter your display name" />
-            </div>
-            
-            <div class="form-group">
-                <label for="securityQuestion1"> <strong>Security Question1:</strong> What is your mother's maiden name? </label>
-                <input type="text" id="securityQuestion1" name="securityQuestion1" required placeholder="Enter your answer" />
-            </div>
-            
-            <div class="form-group">
-                <label for="securityQuestion2"><strong>Security Question2:</strong> What is the name of your first pet?</label>
-                <input type="text" id="securityQuestion2" name="securityQuestion2" required placeholder="Enter your answer" />
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required placeholder="Enter your password" />
-            </div>
-            
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password:</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password" />
-            </div>
-            
-            <button type="submit" class="btn">Sign Up</button>
-        </form>
-        
-        <div class="login-link">
-            <p>Already have an account? <a th:href="@{/login}">Login here</a>.</p>
-        </div>
+  <div class="signup-container">
+    <h2>Create an Account</h2>
+
+    <div th:if="${errorMessage}" class="error">
+      <p th:text="${errorMessage}"></p>
     </div>
+
+    <form th:action="@{/signup}" method="post">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email" />
+      </div>
+
+      <div class="form-group">
+        <label for="displayName">Display Name:</label>
+        <input type="text" id="displayName" name="displayName" required placeholder="Enter your name" />
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+          <option value="" disabled selected>Select your gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" min="0" max="120" required placeholder="Enter your age" />
+      </div>
+
+      <div class="form-group">
+        <label for="securityQuestion1"><strong>Security Question 1:</strong> What is your mother's maiden name?</label>
+        <input type="text" id="securityQuestion1" name="securityQuestion1" required placeholder="Enter answer" />
+      </div>
+
+      <div class="form-group">
+        <label for="securityQuestion2"><strong>Security Question 2:</strong> What is the name of your first pet?</label>
+        <input type="text" id="securityQuestion2" name="securityQuestion2" required placeholder="Enter answer" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password" />
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm password" />
+      </div>
+
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="login-link">
+      <p>Already have an account? <a th:href="@{/login}">Login here</a>.</p>
+    </div>
+  </div>
 </body>
 </html>

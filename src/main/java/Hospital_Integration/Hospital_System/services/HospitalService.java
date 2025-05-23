@@ -33,18 +33,16 @@ public class HospitalService {
     }
     
     public HospitalModel findByHospitalId(int hospitalId) {
-//    	System.out.print(hospitalRepo.findByHospitalId(hospitalId));
     	return hospitalRepo.findByHospitalId(hospitalId);
     }
 
-    public boolean loginHospital(String email, String password) {
+    public HospitalModel loginHospital(String email, String password) {
         HospitalModel hospital = hospitalRepo.findByEmail(email);
 
         if (hospital == null) {
-            return false; // No hospital found with the given email
+            return null; 
         }
-
-        return passwordEncoder.matches(password, hospital.getPassword());
+        return passwordEncoder.matches(password, hospital.getPassword())? hospital:null;
     }
     
     // Method to find a user by email
