@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;             
+            background-image: url("/images/background.png");             
+            background-repeat: no-repeat;             
+            background-size: cover;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .line-with-bullets {             
+            display: flex;             
+            align-items: center;             
+            justify-content: center;             
+            width: 90%;             
+        }          
+        .bullet {             
+            width: 12px;             
+            height: 12px;             
+            background-color: #87CEEB;            
+            border-radius: 50%;             
+            margin: 0 10px;         
+        }          
+        .line {             
+            flex-grow: 1;             
+            height: 1px;             
+            background: linear-gradient(to right, #87CEEB, white);         
+        }
+        .intro-container {
+            text-align: center;
+            max-width: 900px;
+            padding: 20px;
+            margin-left: 3%;
+        }
+        .heading {
+            font-size: 36px;
+            font-weight: bold;
+            color: black;
+            margin-bottom: 12px;
+        }
+        .highlight {
+            background: linear-gradient(to right, #87CEEB, #023263);
+            color: white;
+            padding: 2px 15px;
+            border-radius: 20px;
+        }
+        .content p {
+            font-size: 14px;
+            color: black;
+            font-weight: normal;
+            padding-top: 0%;
+            line-height: 1.6;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .container {
+            text-align: center;
+        }
+        .card-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-align: center;
+            width: 200px;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            animation: gradientShift 3s ease infinite;
+        }
+        button {
+            width: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 18px;
+            border: none;
+            background-color: #1e1e20;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button a{
+            color: white;
+            text-decoration: none; 
+        }
+        button:hover {
+            background-color: #010107;
+        }
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+                background: linear-gradient(to right, #87CEEB, white);
+            }
+            50% {
+                background-position: 100% 50%;
+                background: linear-gradient(to right, #ADD8E6, #ffffff);
+            }
+            100% {
+                background-position: 0% 50%;
+                background: linear-gradient(to right, #87CEEB, white);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-container">
+        <div class="heading">Say Goodbye to Hospital Hassles,</div>
+        <div class="heading">Access Quality <span class="highlight">Healthcare</span> Anytime, Anywhere!</div>
+    </div>    
+    <!-- Content Section -->
+    <div class="content">
+        <p>Our Hospital Integration System brings multiple hospitals onto a single platform, making healthcare more accessible and efficient. Whether it's checking bed availability, booking appointments, or managing OPD queues, our user-friendly system ensures seamless communication between patients, doctors, and hospital staff.</p>
+    </div>
+    <div class="line-with-bullets">         
+        <div class="bullet"></div>         
+        <div class="line"></div>         
+        <div class="bullet"></div>    
+    </div>
+    <div class="container">
+        <h1>Login Portal</h1>
+        <div class="card-container">
+            <div class="card" >
+                <h2>Doctors</h2>
+                <p>Login for doctors to access medical records.</p>
+                <button><a th:href="@{/doctor/login}">Login</a></button>
+            </div>
+            <div class="card" >
+                <h2>Users</h2>
+                <p>Login for users to manage appointments.</p>
+                <button><a th:href="@{/login}">Login</a></button>
+            </div>
+            <div class="card">
+                <h2>Hospital</h2>
+                <p>Login for hospitals to manage patients.</p>
+                <button><a th:href="@{/hospital/login}">Login</a></button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>

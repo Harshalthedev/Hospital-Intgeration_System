@@ -14,6 +14,11 @@ public class CommonController {
         return new ModelAndView("index");
     }
 	
+	@GetMapping("/home")
+    public ModelAndView showLandingPage() {
+        return new ModelAndView("home");
+    }
+	
 	@GetMapping("/doctor-login")
     public ModelAndView showDoctorLoginPage() {
         return new ModelAndView("doctor-login");

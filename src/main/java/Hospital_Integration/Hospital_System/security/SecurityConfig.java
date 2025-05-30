@@ -52,7 +52,8 @@ public class SecurityConfig {
             )
             .authorizeRequests(authorize -> authorize
                 .requestMatchers(
-                    "/index", 
+                    "/index",
+                    "/home",
                     "/doctor-login", 
                     "/login", 
                     "/signup", 
