@@ -101,11 +101,7 @@ public class HospitalController {
     }
     
     @PostMapping("/login")
-    public RedirectView login(
-        @RequestParam String username,
-        @RequestParam String password,
-        HttpSession session
-    ) {
+    public RedirectView login(@RequestParam String username, @RequestParam String password, HttpSession session) {
         try {
             HospitalModel hospital = hospitalService.loginHospital(username, password); 
             session.setAttribute("hospitalId", hospital.getHospitalId());

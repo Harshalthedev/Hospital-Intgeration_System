@@ -1,18 +1,10 @@
 package Hospital_Integration.Hospital_System.controller;
 
-import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,24 +19,23 @@ import org.springframework.web.servlet.view.RedirectView;
 import Hospital_Integration.Hospital_System.dto.DoctorDto;
 import Hospital_Integration.Hospital_System.model.DoctorModel;
 import Hospital_Integration.Hospital_System.model.HospitalModel;
-import Hospital_Integration.Hospital_System.repository.DoctorRepo;
 import Hospital_Integration.Hospital_System.services.DoctorService;
+import Hospital_Integration.Hospital_System.services.HospitalService;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/doctor")
 public class DoctorController {
 	
-//	@Autowired
-//	private AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
+    @SuppressWarnings("unused")
+	private final PasswordEncoder passwordEncoder;
 	private final DoctorService doctorService;
-//    private final AuthenticationManager authenticationManager;
-    
+	private final HospitalService hospitalService; 
 
-    public DoctorController(DoctorService doctorService, PasswordEncoder passwordEncoder) {
+    public DoctorController(DoctorService doctorService, HospitalService hospitalService, PasswordEncoder passwordEncoder) {
         this.doctorService = doctorService;
+        this.hospitalService = hospitalService;
 		this.passwordEncoder = passwordEncoder;
-//		this.authenticationManager = authenticationManager;
     }
     
     @GetMapping("/signup")
@@ -58,8 +49,15 @@ public class DoctorController {
     }
     
     @GetMapping("/dashboard")
-    public ModelAndView showDashboardPage() {
-        return new ModelAndView("doctor-dashboard");
+    public ModelAndView showDashboardPage(HttpSession session) {
+        String hospitalName = String.valueOf(session.getAttribute("hospitalName"));
+        String doctorName = String.valueOf(session.getAttribute("doctorName"));
+
+        ModelAndView modelAndView = new ModelAndView("doctor-dashboard");
+        modelAndView.addObject("doctorName", doctorName);
+        modelAndView.addObject("hospitalName", hospitalName);
+
+        return modelAndView;
     }
  
     @PostMapping("/signup")
@@ -75,28 +73,27 @@ public class DoctorController {
     }
     
     @PostMapping("/login")
-    public RedirectView login(@RequestParam String username, @RequestParam String password, int hospitalId) {        
-
+    public RedirectView login(@RequestParam String username, @RequestParam String password, @RequestParam int hospitalId, HttpSession session) {        
     	try {
-            boolean doctorAuth = doctorService.loginDoctor(username, password,hospitalId);
-
-            if (doctorAuth) {
+    		DoctorModel doctor = doctorService.loginDoctor(username, password, hospitalId);
+    		    HospitalModel hospital = hospitalService.findByHospitalId(hospitalId);
+    		    
+    		    session.setAttribute("hospitalId", doctor.getHospitalId());
+                session.setAttribute("hospitalName", hospital.getDisplayName());
+                session.setAttribute("doctorName", doctor.getDisplayName());
                 return new RedirectView("/doctor/dashboard");
-            }
             
-        } catch (AuthenticationException e) {
+        } catch (Exception e) {
             RedirectView redirectView = new RedirectView("/doctor/login");
             redirectView.addStaticAttribute("error", true);
             return redirectView;
         }
-        return new RedirectView("/doctor/login?error=true");
     }
     
     @GetMapping("/findDoctor-ByHospitalId/{hospitalId}")
     public ResponseEntity<List<DoctorModel>> getDoctorByHospitalId(@PathVariable int hospitalId) {
         try {
             List<DoctorModel> doctors = doctorService.findDoctorsByHospitalId(hospitalId);
-            System.out.println("hello i am from this id "+doctors.toString());
             return ResponseEntity.ok(doctors); 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);

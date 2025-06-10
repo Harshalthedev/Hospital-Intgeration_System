@@ -27,7 +27,8 @@ public class HospitalModel {
     
     @Column(unique = true, nullable = false)
     private int hospitalId;
-
+    
+   
 	public HospitalModel() {}
 	
 	public HospitalModel( String email, String password, String displayName, int hospitalId) {

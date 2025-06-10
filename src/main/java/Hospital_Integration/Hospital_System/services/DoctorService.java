@@ -8,18 +8,15 @@ import org.springframework.stereotype.Service;
 import Hospital_Integration.Hospital_System.model.DoctorModel;
 import Hospital_Integration.Hospital_System.model.HospitalModel;
 import Hospital_Integration.Hospital_System.repository.DoctorRepo;
-import Hospital_Integration.Hospital_System.repository.HospitalRepo;
 
 @Service
 public class DoctorService {
 	private final DoctorRepo doctorRepo;
 	private final HospitalService hospitalService;
-//	private final HospitalRepo hospitalRepo;
     private final PasswordEncoder passwordEncoder;
 
     public DoctorService(DoctorRepo doctorRepo,HospitalService hospitalService, PasswordEncoder passwordEncoder) {
         this.doctorRepo = doctorRepo;
-//        this.hospitalRepo = hospitalRepo;
         this.hospitalService = hospitalService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -46,19 +43,18 @@ public class DoctorService {
         DoctorModel doctor = new DoctorModel(email, encodedPassword, displayName, hospitalId, specialization);
         return doctorRepo.save(doctor);
     }
-    public boolean loginDoctor(String email, String password, int hospitalId) {
+    
+    public DoctorModel loginDoctor(String email, String password, int hospitalId) {
         DoctorModel doctor = doctorRepo.findByEmail(email);
 
         if (doctor == null) {
-            return false; // No hospital found with the given email
+            return null; 
         }
-        HospitalModel hospital = hospitalService.findByHospitalId(hospitalId);
-        if (hospital == null) return false;
-
-        return passwordEncoder.matches(password, doctor.getPassword());
+        return (passwordEncoder.matches(password, doctor.getPassword()) 
+        		&& (doctor.getHospitalId() == hospitalId)) ? doctor : null;
     }
     
-//    find doctor by hospitalid
+    // find doctor by hospitalid
     public List<DoctorModel> findDoctorsByHospitalId(Integer hospitalId) {
     	return doctorRepo.findByHospitalId(hospitalId);
     }
