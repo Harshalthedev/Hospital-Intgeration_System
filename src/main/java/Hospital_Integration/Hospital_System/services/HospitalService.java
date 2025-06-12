@@ -21,14 +21,14 @@ public class HospitalService {
     }
 
     // Method to register a new user
-    public HospitalModel registerHospital(String email, String password, String displayName, int hospitalId) {
+    public HospitalModel registerHospital(String email, String password, String displayName, int hospitalId, String address) {
         if (hospitalRepo.findByEmail(email) != null) {
             throw new RuntimeException("User with email " + email + " already exists");
         }
         
         String encodedPassword = passwordEncoder.encode(password);
 
-        HospitalModel hospital = new HospitalModel(email, encodedPassword, displayName, hospitalId);
+        HospitalModel hospital = new HospitalModel(email, encodedPassword, displayName, hospitalId, address);
         return hospitalRepo.save(hospital);
     }
     

@@ -6,6 +6,7 @@ public class HospitalDto {
     private String password;
     private String displayName;
     private int hospitalId;
+    private String address;
 	
     
     
@@ -34,12 +35,19 @@ public class HospitalDto {
 		hospitalId = hospitalId;
 	}
 
-	public HospitalDto(String email, String password, String displayName, int hospitalId) {
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public HospitalDto(String email, String password, String displayName, int hospitalId, String address) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.displayName = displayName;
 		this.hospitalId = hospitalId;
+		this.address = address;
 	} 
  
 }

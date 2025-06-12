@@ -28,15 +28,19 @@ public class HospitalModel {
     @Column(unique = true, nullable = false)
     private int hospitalId;
     
+    @Column(nullable = false)
+    private String address;
+    
    
 	public HospitalModel() {}
 	
-	public HospitalModel( String email, String password, String displayName, int hospitalId) {
+	public HospitalModel( String email, String password, String displayName, int hospitalId, String address) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.displayName = displayName;
 		this.hospitalId = hospitalId;
+		this.address = address;
 	}
 	
     public HospitalModel(String email, String password) {
@@ -76,7 +80,14 @@ public class HospitalModel {
 	public void setHospitalId(int hospitalId) {
 		this.hospitalId = hospitalId;
 	}
-    
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
     
 }
 

@@ -2,163 +2,266 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hospital Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* same CSS as before */
-    body, html {
+    * {
       margin: 0;
       padding: 0;
-      height: 100%;
+      box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f8f9fa;
     }
-    .container {
-      padding: 20px;
-      min-height: calc(100vh - 100px);
-    }
-    .tabs {
+
+    body {
       display: flex;
-      margin-bottom: 20px;
-      gap: 10px;
+      height: 100vh;
+      overflow: hidden;
     }
-    .tab-button {
-      padding: 10px 20px;
-      cursor: pointer;
-      background: #007bff;
+
+    .sidebar {
+      width: 220px;
+      background-color: #212529;
       color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.4em;
+    }
+
+    .sidebar button {
+      background: none;
       border: none;
-      border-radius: 5px;
-      transition: background 0.3s;
+      color: white;
+      padding: 15px 20px;
+      text-align: left;
+      font-size: 1em;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s ease;
+      cursor: pointer;
     }
-    .tab-button:hover {
-      background: #0056b3;
+
+    .sidebar button:hover {
+      background-color: #343a40;
     }
-    .tab-content {
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #f1f3f5;
+    }
+
+    .header {
+      background-color: #0d6efd;
+      color: white;
+      padding: 30px 50px;
+      font-size: 1.5em;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .card {
       background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
     }
+
     .hidden {
       display: none;
     }
-    footer {
-      height: 100px;
-      background: #343a40;
-      color: white;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      bottom: 0;
-      width: 100%;
-    }
+
     input, select, button {
-      display: block;
-      margin: 10px 0;
-      padding: 10px;
       width: 100%;
-      max-width: 400px;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
       border: 1px solid #ced4da;
-      border-radius: 5px;
+      font-size: 1em;
     }
-    button {
-      background-color: #28a745;
+
+    button.submit-btn {
+      background-color: #198754;
       color: white;
       border: none;
-      cursor: pointer;
       transition: background-color 0.3s;
     }
-    button:hover {
-      background-color: #218838;
+
+    button.submit-btn:hover {
+      background-color: #157347;
+    }
+
+    footer {
+      background: #212529;
+      color: white;
+      padding: 25px;
+      text-align: center;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
-	<div id="data-holder"
-	     th:attr="data-display-user-name=${displayUserName},
-	              data-user-email=${userEmail},
-	              data-user-age=${userAge},
-	              data-user-gender=${userGender}">
-	</div>
-	
-  <div class="container">
-    <div class="tabs">
-      <button class="tab-button" onclick="showTab('beds')">Beds</button>
-      <button class="tab-button" onclick="showTab('appointment')">Book Appointment</button>
-      <button class="tab-button" onclick="showTab('view')">View Appointments</button>
-    </div>
 
-    <div id="beds" class="tab-content">
-      <p>Total Beds: 100</p>
-      <p>Available Beds: 40</p>
-      <p>Occupied Beds: 60</p>
-    </div>
-
-    <div id="appointment" class="tab-content hidden">
-      <button onclick="fetchDetails()">Fetch Patient Details</button>
-      <input id="name" placeholder="Name" readonly>
-      <input id="age" placeholder="Age" readonly>
-      <input id="gender" placeholder="Gender" readonly>
-      <input id="email" placeholder="Email" readonly>
-      <select id="disease">
-        <option>Cardiology</option>
-        <option>Neurology</option>
-        <option>Orthopedics</option>
-        <option>Dermatology</option>
-      </select>
-      <input id="date" type="date">
-      <button onclick="submitAppointment()">Submit Appointment</button>
-    </div>
-
-    <div id="view" class="tab-content hidden">
-      <div id="appointments">No appointments booked.</div>
-    </div>
+  <div class="sidebar">
+    <h2>Dashboard</h2>
+    <button onclick="showTab('beds')"><i class="fas fa-bed"></i> Beds</button>
+    <button onclick="showTab('appointment')"><i class="fas fa-calendar-plus"></i> Book Appointment</button>
+    <button onclick="showTab('view')"><i class="fas fa-eye"></i> View Appointments</button>
   </div>
 
-  <footer>
-    <div>Contact: 123-456-7890</div>
-    <div>Address: 123 Health St, MedCity</div>
-  </footer>
+  <div class="main">
+    <div class="header" th:text="${hospitalName}">Hospital Name</div>
+
+    <div class="content">
+      <div id="beds" class="card">
+        <h3>Bed Status</h3>
+        <p>Total Beds: 100</p>
+        <p>Available Beds: 40</p>
+        <p>Occupied Beds: 60</p>
+      </div>
+
+      <div id="appointment" class="card hidden">
+        <h3>Book Appointment</h3>
+        <button onclick="fetchDetails()">Fetch Patient Details</button>
+        <input id="name" placeholder="Name" readonly />
+        <input id="age" placeholder="Age" readonly />
+        <input id="gender" placeholder="Gender" readonly />
+        <input id="email" placeholder="Email" readonly />
+
+        <select id="disease" onchange="populateDoctors()">
+          <option value="">Select Disease</option>
+          <option value="Cardiology">Cardiology</option>
+          <option value="Neurology">Neurology</option>
+          <option value="Orthopedics">Orthopedics</option>
+          <option value="Dermatology">Dermatology</option>
+        </select>
+
+        <select id="doctor" disabled>
+          <option value="">Select Doctor</option>
+        </select>
+
+        <input id="date" type="date" />
+        <button class="submit-btn" onclick="submitAppointment()">Submit Appointment</button>
+      </div>
+
+      <div id="view" class="card hidden">
+        <h3>Appointments</h3>
+        <div id="appointments">No appointments booked.</div>
+      </div>
+    </div>
+
+    <footer th:text="${hospitalAddress}">
+      123 Health St, MedCity | Contact: 123-456-7890
+    </footer>
+  </div>
+
+  <div id="data-holder"
+    th:attr="data-display-user-name=${displayUserName},
+             data-user-email=${userEmail},
+             data-user-age=${userAge},
+             data-user-gender=${userGender},
+             data-hospital-id=${hospitalId}">
+  </div>
 
   <script th:inline="javascript">
     function showTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+      document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
       document.getElementById(tabId).classList.remove('hidden');
     }
 
-	function fetchDetails() {
-	  const holder = document.getElementById("data-holder");
-	
-	  const displayUserName = holder.dataset.displayUserName;
-	  const userEmail = holder.dataset.userEmail;
-	  const userAge = holder.dataset.userAge;
-	  const userGender = holder.dataset.userGender;
-	
-	  document.getElementById('name').value = displayUserName;
-	  document.getElementById('age').value = userAge;
-	  document.getElementById('gender').value = userGender;
-	  document.getElementById('email').value = userEmail;
-	}
+    function fetchDetails() {
+      const holder = document.getElementById("data-holder");
+      document.getElementById('name').value = holder.dataset.displayUserName;
+      document.getElementById('age').value = holder.dataset.userAge;
+      document.getElementById('gender').value = holder.dataset.userGender;
+      document.getElementById('email').value = holder.dataset.userEmail;
+    }
+
+    function isFutureDate(userInput) {
+      const inputDate = new Date(userInput);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return inputDate >= today;
+    }
+
+    async function populateDoctors() {
+      const holder = document.getElementById("data-holder");
+      const hospitalId = parseInt(holder.dataset.hospitalId);
+
+      try {
+        const response = await fetch(`/doctor/findDoctor-ByHospitalId/${hospitalId}`);
+        if (!response.ok) throw new Error('Failed to fetch doctors');
+        const doctors = await response.json();
+
+        const disease = document.getElementById("disease").value;
+        const doctorSelect = document.getElementById("doctor");
+        doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+
+        if (disease) {
+          doctorSelect.disabled = false;
+          doctors.forEach(doctor => {
+            if (doctor.specialization) {
+              const option = document.createElement("option");
+              option.value = doctor.displayName;
+              option.textContent = doctor.displayName;
+              doctorSelect.appendChild(option);
+            }
+          });
+          doctorSelect.appendChild(new Option("None", "None"));
+        } else {
+          doctorSelect.disabled = true;
+        }
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+        alert('Could not load doctors. Please try again later.');
+      }
+    }
 
     function submitAppointment() {
       const name = document.getElementById('name').value;
       const disease = document.getElementById('disease').value;
       const date = document.getElementById('date').value;
-      const appointment = `${name} - ${disease} - Doctor: Dr. Smith on ${date}`;
-      const appointmentsDiv = document.getElementById('appointments');
-      if (appointmentsDiv.innerText === 'No appointments booked.') {
-        appointmentsDiv.innerText = appointment;
-      } else {
-        appointmentsDiv.innerHTML += `<div>${appointment}</div>`;
+
+      try {
+        if (!isFutureDate(date)) {
+          throw new Error('Selected date is not in the future.');
+        }
+
+        const appointment = `${name} - ${disease} - Doctor: Dr. Smith on ${date}`;
+        const appointmentsDiv = document.getElementById('appointments');
+
+        if (appointmentsDiv.innerText === 'No appointments booked.') {
+          appointmentsDiv.innerText = appointment;
+        } else {
+          appointmentsDiv.innerHTML += `<div>${appointment}</div>`;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Could not book the appointment. Please select a valid future date.');
       }
     }
-
-    const hospitalId = localStorage.getItem("selectedHospitalId");
-    console.log(hospitalId);
   </script>
 </body>
 </html>

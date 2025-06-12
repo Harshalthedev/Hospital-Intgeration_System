@@ -117,24 +117,6 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/login")
-//    public RedirectView login(@RequestParam String username, @RequestParam String password) {
-//        try {
-//            Authentication auth = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(username, password)
-//            );
-//
-//            if (auth.isAuthenticated()) {
-//                return new RedirectView("/dashboard");
-//            }
-//        } catch (AuthenticationException e) {
-//        	
-//            RedirectView redirectView = new RedirectView("/login");
-//            redirectView.addStaticAttribute("error", true);
-//            return redirectView;
-//        }
-//        return new RedirectView("/login?error=true");
-//    }
     
     @PostMapping("/login")
     public RedirectView login(@RequestParam String username, @RequestParam String password) {
