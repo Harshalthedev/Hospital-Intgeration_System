@@ -78,7 +78,8 @@ public class HospitalController {
             HospitalModel hospital = hospitalService.loginHospital(username, password);
             session.setAttribute("hospitalId", hospital.getHospitalId());
             return new RedirectView("/hospital/dashboard");
-        } catch (AuthenticationException | NullPointerException e) {
+        } 
+        catch (AuthenticationException | NullPointerException e) {
             RedirectView redirectView = new RedirectView("/hospital/login");
             redirectView.addStaticAttribute("error", true);
             return redirectView;
@@ -98,9 +99,20 @@ public class HospitalController {
     }
 
     @GetMapping("/details/{hospitalId}")
-    public ModelAndView getHospitalDashboard(@PathVariable String hospitalId, HttpSession session) {
-        HospitalModel hospital = hospitalService.findByHospitalId(Integer.parseInt(hospitalId));
+    public ModelAndView showHospitalDetails(@PathVariable int hospitalId, HttpSession session) {
+        HospitalModel hospital = hospitalService.findByHospitalId(hospitalId);
+        BedModel bed = bedRepo.findByHospitalId(hospitalId);
+
+        int totalBeds = bed.getTotalBeds();
+        int occupiedBeds = bed.getOccupiedBeds();
+        int availableBeds = totalBeds - occupiedBeds;
+
         ModelAndView mav = new ModelAndView("user-hospitalDashBoard");
+        mav.addObject("hospital", hospital);
+        mav.addObject("hospitalId", hospitalId);
+        mav.addObject("totalBeds", totalBeds);
+        mav.addObject("occupiedBeds", occupiedBeds);
+        mav.addObject("availableBeds", availableBeds);
 
         mav.addObject("hospital", hospital);
         mav.addObject("displayUserName", session.getAttribute("displayUserName"));

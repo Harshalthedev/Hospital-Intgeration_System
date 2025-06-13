@@ -106,6 +106,41 @@
     button.submit-btn:hover {
       background-color: #157347;
     }
+	.bed-card-container {
+	  display: flex;
+	  justify-content: space-between;
+	  flex-wrap: wrap;
+	  gap: 20px;
+	}
+	
+	.bed-card {
+	  flex: 1;
+	  min-width: 150px;
+	  padding: 20px;
+	  border-radius: 12px;
+	  color: white;
+	  text-align: center;
+	  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+	  font-size: 1.2em;
+	}
+	
+	.bed-card h4 {
+	  margin-bottom: 10px;
+	  font-size: 1.1em;
+	}
+	
+	.bed-card.total {
+	  background-color: #0d6efd;
+	}
+	
+	.bed-card.available {
+	  background-color: #198754;
+	}
+	
+	.bed-card.occupied {
+	  background-color: #dc3545;
+	}
+
 
     footer {
       background: #212529;
@@ -132,16 +167,30 @@
   </div>
 
   <div class="main">
-    <div class="header" th:text="${hospitalName}">Hospital Name</div>
+    <div class="header" th:text="${hospital.displayName}">Hospital Name</div>
 
     <div class="content">
-      <div id="beds" class="card">
-        <h3>Bed Status</h3>
-        <p>Total Beds: 100</p>
-        <p>Available Beds: 40</p>
-        <p>Occupied Beds: 60</p>
-      </div>
+      <!-- Bed Information -->
+	  <!-- Bed Information - Updated Card Design -->
+	  <div id="beds" class="card">
+	    <h3 style="margin-bottom: 20px;">Bed Status</h3>
+	    <div class="bed-card-container">
+	      <div class="bed-card total">
+	        <h4>Total Beds</h4>
+	        <p th:text="${totalBeds}">100</p>
+	      </div>
+	      <div class="bed-card available">
+	        <h4>Available Beds</h4>
+	        <p th:text="${availableBeds}">40</p>
+	      </div>
+	      <div class="bed-card occupied">
+	        <h4>Occupied Beds</h4>
+	        <p th:text="${occupiedBeds}">60</p>
+	      </div>
+	    </div>
+	  </div>
 
+      <!-- Appointment Booking -->
       <div id="appointment" class="card hidden">
         <h3>Book Appointment</h3>
         <button onclick="fetchDetails()">Fetch Patient Details</button>
@@ -154,6 +203,7 @@
           <option value="">Select Disease</option>
           <option value="Cardiology">Cardiology</option>
           <option value="Neurology">Neurology</option>
+		  <option value="Pediatrics">Pediatrics</option>
           <option value="Orthopedics">Orthopedics</option>
           <option value="Dermatology">Dermatology</option>
         </select>
@@ -166,22 +216,21 @@
         <button class="submit-btn" onclick="submitAppointment()">Submit Appointment</button>
       </div>
 
+      <!-- View Appointments -->
       <div id="view" class="card hidden">
         <h3>Appointments</h3>
         <div id="appointments">No appointments booked.</div>
       </div>
     </div>
 
-    <footer th:text="${hospitalAddress}">
-      123 Health St, MedCity | Contact: 123-456-7890
-    </footer>
+    <footer th:text="${hospital.address}">123 Health St, MedCity | Contact: 123-456-7890</footer>
   </div>
 
   <div id="data-holder"
-    th:attr="data-display-user-name=${displayUserName},
-             data-user-email=${userEmail},
-             data-user-age=${userAge},
-             data-user-gender=${userGender},
+    th:attr="data-display-user-name=${displayUserName ?: 'Unknown'},
+             data-user-email=${userEmail ?: 'Unknown'},
+             data-user-age=${userAge ?: '0'},
+             data-user-gender=${userGender ?: 'Unknown'},
              data-hospital-id=${hospitalId}">
   </div>
 
@@ -209,30 +258,31 @@
     async function populateDoctors() {
       const holder = document.getElementById("data-holder");
       const hospitalId = parseInt(holder.dataset.hospitalId);
+      const disease = document.getElementById("disease").value;
+      const doctorSelect = document.getElementById("doctor");
+      doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+
+      if (!disease) {
+        doctorSelect.disabled = true;
+        return;
+      }
 
       try {
         const response = await fetch(`/doctor/findDoctor-ByHospitalId/${hospitalId}`);
         if (!response.ok) throw new Error('Failed to fetch doctors');
         const doctors = await response.json();
 
-        const disease = document.getElementById("disease").value;
-        const doctorSelect = document.getElementById("doctor");
-        doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+        doctors.forEach(doctor => {
+          if (doctor.specialization === disease) {
+            const option = document.createElement("option");
+            option.value = doctor.displayName;
+            option.textContent = doctor.displayName;
+            doctorSelect.appendChild(option);
+          }
+        });
 
-        if (disease) {
-          doctorSelect.disabled = false;
-          doctors.forEach(doctor => {
-            if (doctor.specialization) {
-              const option = document.createElement("option");
-              option.value = doctor.displayName;
-              option.textContent = doctor.displayName;
-              doctorSelect.appendChild(option);
-            }
-          });
-          doctorSelect.appendChild(new Option("None", "None"));
-        } else {
-          doctorSelect.disabled = true;
-        }
+        doctorSelect.appendChild(new Option("None", "None"));
+        doctorSelect.disabled = false;
       } catch (error) {
         console.error('Error fetching doctors:', error);
         alert('Could not load doctors. Please try again later.');
@@ -242,6 +292,7 @@
     function submitAppointment() {
       const name = document.getElementById('name').value;
       const disease = document.getElementById('disease').value;
+      const doctor = document.getElementById('doctor').value || "None";
       const date = document.getElementById('date').value;
 
       try {
@@ -249,7 +300,7 @@
           throw new Error('Selected date is not in the future.');
         }
 
-        const appointment = `${name} - ${disease} - Doctor: Dr. Smith on ${date}`;
+        const appointment = `${name} - ${disease} - Doctor: ${doctor} on ${date}`;
         const appointmentsDiv = document.getElementById('appointments');
 
         if (appointmentsDiv.innerText === 'No appointments booked.') {
