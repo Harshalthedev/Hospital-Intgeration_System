@@ -55,6 +55,7 @@ public class SecurityConfig {
                     "/index",
                     "/home",
                     "/doctor-login", 
+                    "/appointmentDetails",
                     "/login", 
                     "/signup", 
                     "/reset-password", 

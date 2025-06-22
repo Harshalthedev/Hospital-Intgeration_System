@@ -1,7 +1,11 @@
 package Hospital_Integration.Hospital_System.controller;
 
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +25,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import Hospital_Integration.Hospital_System.dto.AppointmentRequest;
+import Hospital_Integration.Hospital_System.dto.AppointmentViewDTO;
+import Hospital_Integration.Hospital_System.dto.BedUpdateRequest;
 import Hospital_Integration.Hospital_System.dto.UserDto;
+import Hospital_Integration.Hospital_System.model.AppointmentModel;
 import Hospital_Integration.Hospital_System.model.HospitalModel;
 import Hospital_Integration.Hospital_System.model.UserModel;
 import Hospital_Integration.Hospital_System.repository.UserRepo;
+import Hospital_Integration.Hospital_System.services.AppointmentService;
 import Hospital_Integration.Hospital_System.services.UserService;
 import jakarta.servlet.http.HttpSession;
 
@@ -34,12 +44,14 @@ public class UserController {
 
     private final UserService userService;
     private UserRepo userRepo;
+    private final AppointmentService appointmentService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public UserController(UserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, AppointmentService appointmentService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.appointmentService = appointmentService;
         this.authenticationManager = authenticationManager;
     }
  
@@ -186,6 +198,47 @@ public class UserController {
 
         return new RedirectView("/login");
     }
+    
+    @PostMapping("/appointmentDetailsJson")
+    public ResponseEntity<String> bookAppointmentJson(@RequestBody AppointmentRequest request) {
+        System.out.println("JSON appointment received for: " + request.userEmail);
+        try {
+            appointmentService.submitAppointment(
+                request.userName,
+                request.userEmail,
+                request.userGender,
+                request.userAge,
+                request.userDisease,
+                request.doctorName,
+                request.hospitalId,
+                request.appointmentDate
+            );
+            return ResponseEntity.ok("Appointment submitted successfully via JSON.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to submit appointment: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/appointment/view")
+    public ResponseEntity<List<AppointmentViewDTO>> getAppointments(@RequestParam String userEmail) {
+        List<AppointmentModel> appointments = appointmentService.findByUserEmail(userEmail);
+
+        List<AppointmentViewDTO> result = appointments.stream().map(app ->
+            new AppointmentViewDTO(
+                app.getUserName(),
+                app.getDoctorName(),
+                app.getUserDisease(),
+                app.getStatus(), // 0 or 1
+                app.getAppointmentDate()
+            )
+        ).collect(Collectors.toList());
+
+        return ResponseEntity.ok(result);
+    }
+
+
     
     @PostMapping("/profile")
     public RedirectView updateProfile(@RequestParam String displayName,

@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>	
   <title>Hospital Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -238,10 +240,23 @@
         <button class="submit-btn" onclick="submitAppointment()">Submit Appointment</button>
       </div>
 
-      <div id="view" class="card hidden">
-        <h3>Appointments</h3>
-        <div id="appointments">No appointments booked.</div>
-      </div>
+	  <div id="view" class="card hidden">
+	    <h3>Appointments</h3>
+	    <table style="width:100%; border-collapse: collapse;">
+	      <thead>
+	        <tr style="background-color: #f1f1f1;">
+	          <th style="padding: 10px; border: 1px solid #ccc;">User</th>
+	          <th style="padding: 10px; border: 1px solid #ccc;">Doctor</th>
+	          <th style="padding: 10px; border: 1px solid #ccc;">Disease</th>
+	          <th style="padding: 10px; border: 1px solid #ccc;">Status</th>
+	          <th style="padding: 10px; border: 1px solid #ccc;">Date</th>
+	        </tr>
+	      </thead>
+	      <tbody id="appointments-body">
+	        <tr><td colspan="5">Loading...</td></tr>
+	      </tbody>
+	    </table>
+	  </div>
 
       <div id="contacts" class="card hidden">
         <h3>Hospital Contact Information</h3>
@@ -315,30 +330,99 @@
       }
     }
 
-    function submitAppointment() {
-      const name = document.getElementById('name').value;
-      const disease = document.getElementById('disease').value;
-      const doctor = document.getElementById('doctor').value || "None";
-      const date = document.getElementById('date').value;
-
-      try {
-        if (!isFutureDate(date)) {
-          throw new Error('Selected date is not in the future.');
-        }
-
-        const appointment = `${name} - ${disease} - Doctor: ${doctor} on ${date}`;
-        const appointmentsDiv = document.getElementById('appointments');
-
-        if (appointmentsDiv.innerText === 'No appointments booked.') {
-          appointmentsDiv.innerText = appointment;
-        } else {
-          appointmentsDiv.innerHTML += `<div>${appointment}</div>`;
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Could not book the appointment. Please select a valid future date.');
-      }
-    }
+	async function submitAppointment() {
+	  const name = document.getElementById('name').value;
+	  const age = document.getElementById('age').value;
+	  const email = document.getElementById('email').value;
+	  const gender = document.getElementById('gender').value;
+	  const disease = document.getElementById('disease').value;
+	  const doctor = document.getElementById('doctor').value || "None";
+	  const date = document.getElementById('date').value;
+	  const holder = document.getElementById("data-holder");
+	  const hospitalId = parseInt(holder.dataset.hospitalId);
+	
+	  if (!isFutureDate(date)) {
+	    alert("Please select a future date.");
+	    return;
+	  }
+	
+	  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+	  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+	
+	  const payload = {
+	    userName: name,
+	    userEmail: email,
+	    userGender: gender,
+	    userAge: parseInt(age),
+	    userDisease: disease,
+	    doctorName: doctor,
+	    hospitalId: hospitalId,
+	    appointmentDate: date
+	  };
+	
+	  try {
+	    const response = await fetch("/appointmentDetailsJson", {
+	      method: "POST",
+	      headers: {
+	        "Content-Type": "application/json",
+	        [csrfHeader]: csrfToken
+	      },
+	      body: JSON.stringify(payload)
+	    });
+	
+	    const result = await response.text();
+	    if (response.ok) {
+	      alert("Success: " + result);
+	    } else {
+	      alert("Error: " + result);
+	    }
+	
+	  } catch (error) {
+	    console.error('Error:', error);
+	    alert('Something went wrong. Please try again.');
+	  }
+	}
+	
+	async function fetchAppointments() {
+	  const holder = document.getElementById("data-holder");
+	  const userEmail = holder.dataset.userEmail;
+	
+	  const tableBody = document.getElementById("appointments-body");
+	  tableBody.innerHTML = `<tr><td colspan="5">Loading...</td></tr>`;
+	
+	  try {
+	    const response = await fetch(`/appointment/view?userEmail=${encodeURIComponent(userEmail)}`);
+	    if (!response.ok) throw new Error("Failed to fetch appointments");
+	
+	    const appointments = await response.json();
+	    if (appointments.length === 0) {
+	      tableBody.innerHTML = `<tr><td colspan="5">No appointments found.</td></tr>`;
+	      return;
+	    }
+	
+	    tableBody.innerHTML = "";
+	    appointments.forEach(app => {
+	      const statusText = app.status === 0 ? "Pending" : "Assigned";
+	      const row = `
+	        <tr>
+	          <td>${app.userName}</td>
+	          <td>${app.doctorName}</td>
+	          <td>${app.userDisease}</td>
+	          <td>${statusText}</td>
+	          <td>${new Date(app.appointmentDate).toLocaleDateString()}</td>
+	        </tr>`;
+	      tableBody.insertAdjacentHTML("beforeend", row);
+	    });
+	  } catch (error) {
+	    console.error("Error loading appointments:", error);
+	    tableBody.innerHTML = `<tr><td colspan="5">Failed to load appointments.</td></tr>`;
+	  }
+	}
+	
+	// Fetch appointments on page load
+	window.onload = fetchAppointments;
+	
+	
   </script>
 </body>
 </html>

@@ -137,7 +137,6 @@ public class HospitalController {
 
     @GetMapping("/update-beds/{hospitalId}/{totalBeds}/{occupiedBeds}")
     public ResponseEntity<String> updateBeds(@PathVariable int hospitalId, @PathVariable int totalBeds, @PathVariable int occupiedBeds) {
-    	System.out.print("hello i am in controller");
     	try {
     		BedUpdateRequest request = new BedUpdateRequest(hospitalId, totalBeds, occupiedBeds);
             bedService.updateBeds(request.getHospitalId(), request.getTotalBeds(), request.getOccupiedBeds());
