@@ -16,71 +16,81 @@
     body {
       display: flex;
       height: 100vh;
-      overflow: hidden;
+      background-color: #f5f7fa;
+      color: #212529;
     }
 
     .sidebar {
-      width: 220px;
-      background-color: #212529;
+      width: 240px;
+      background-color: #1f2937;
       color: white;
       display: flex;
       flex-direction: column;
-      padding: 20px 0;
+      padding: 30px 0;
+      gap: 10px;
+      transition: width 0.3s;
     }
 
     .sidebar h2 {
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.4em;
+      margin-bottom: 30px;
+      font-size: 1.6em;
+      font-weight: bold;
     }
 
     .sidebar button {
       background: none;
       border: none;
       color: white;
-      padding: 15px 20px;
-      text-align: left;
+      padding: 15px 25px;
       font-size: 1em;
       width: 100%;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       transition: background 0.2s ease;
       cursor: pointer;
     }
 
     .sidebar button:hover {
-      background-color: #343a40;
+      background-color: #374151;
     }
 
     .main {
       flex: 1;
       display: flex;
       flex-direction: column;
-      background-color: #f1f3f5;
     }
 
     .header {
       background-color: #0d6efd;
       color: white;
-      padding: 30px 50px;
-      font-size: 1.5em;
-      font-weight: bold;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 25px 40px;
+      font-size: 1.6em;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .content {
       flex: 1;
-      padding: 30px;
+      padding: 30px 40px;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
     }
 
     .card {
       background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .card h3 {
+      font-size: 1.3em;
       margin-bottom: 20px;
+      font-weight: 600;
     }
 
     .hidden {
@@ -88,10 +98,10 @@
     }
 
     input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 6px;
+      width: 80%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 8px;
       border: 1px solid #ced4da;
       font-size: 1em;
     }
@@ -100,52 +110,57 @@
       background-color: #198754;
       color: white;
       border: none;
+      font-weight: bold;
+      margin-top: 20px;
       transition: background-color 0.3s;
     }
 
     button.submit-btn:hover {
       background-color: #157347;
     }
-	.bed-card-container {
-	  display: flex;
-	  justify-content: space-between;
-	  flex-wrap: wrap;
-	  gap: 20px;
-	}
-	
-	.bed-card {
-	  flex: 1;
-	  min-width: 150px;
-	  padding: 20px;
-	  border-radius: 12px;
-	  color: white;
-	  text-align: center;
-	  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-	  font-size: 1.2em;
-	}
-	
-	.bed-card h4 {
-	  margin-bottom: 10px;
-	  font-size: 1.1em;
-	}
-	
-	.bed-card.total {
-	  background-color: #0d6efd;
-	}
-	
-	.bed-card.available {
-	  background-color: #198754;
-	}
-	
-	.bed-card.occupied {
-	  background-color: #dc3545;
-	}
 
+    .bed-card-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .bed-card {
+      flex: 1 1 200px;
+      padding: 20px;
+      border-radius: 12px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      font-size: 1.1em;
+      transition: transform 0.2s;
+    }
+
+    .bed-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .bed-card h4 {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .bed-card.total {
+      background-color: #0d6efd;
+    }
+
+    .bed-card.available {
+      background-color: #198754;
+    }
+
+    .bed-card.occupied {
+      background-color: #dc3545;
+    }
 
     footer {
-      background: #212529;
-      color: white;
-      padding: 25px;
+      background: #1f2937;
+      color: #ccc;
+      padding: 20px;
       text-align: center;
       font-size: 0.9em;
     }
@@ -153,6 +168,15 @@
     @media (max-width: 768px) {
       .sidebar {
         display: none;
+      }
+
+      .header {
+        font-size: 1.2em;
+        padding: 20px;
+      }
+
+      .content {
+        padding: 20px;
       }
     }
   </style>
@@ -163,34 +187,32 @@
     <h2>Dashboard</h2>
     <button onclick="showTab('beds')"><i class="fas fa-bed"></i> Beds</button>
     <button onclick="showTab('appointment')"><i class="fas fa-calendar-plus"></i> Book Appointment</button>
-    <button onclick="showTab('view')"><i class="fas fa-eye"></i> View Appointments</button>
+    <button onclick="showTab('view')"><i class="fas fa-list-ul"></i> View Appointments</button>
+    <button onclick="showTab('contacts')"><i class="fas fa-address-book"></i> Contact Info</button>
   </div>
 
   <div class="main">
     <div class="header" th:text="${hospital.displayName}">Hospital Name</div>
 
     <div class="content">
-      <!-- Bed Information -->
-	  <!-- Bed Information - Updated Card Design -->
-	  <div id="beds" class="card">
-	    <h3 style="margin-bottom: 20px;">Bed Status</h3>
-	    <div class="bed-card-container">
-	      <div class="bed-card total">
-	        <h4>Total Beds</h4>
-	        <p th:text="${totalBeds}">100</p>
-	      </div>
-	      <div class="bed-card available">
-	        <h4>Available Beds</h4>
-	        <p th:text="${availableBeds}">40</p>
-	      </div>
-	      <div class="bed-card occupied">
-	        <h4>Occupied Beds</h4>
-	        <p th:text="${occupiedBeds}">60</p>
-	      </div>
-	    </div>
-	  </div>
+      <div id="beds" class="card">
+        <h3>Bed Status</h3>
+        <div class="bed-card-container">
+          <div class="bed-card total">
+            <h4>Total Beds</h4>
+            <p th:text="${totalBeds}">100</p>
+          </div>
+          <div class="bed-card available">
+            <h4>Available Beds</h4>
+            <p th:text="${availableBeds}">40</p>
+          </div>
+          <div class="bed-card occupied">
+            <h4>Occupied Beds</h4>
+            <p th:text="${occupiedBeds}">60</p>
+          </div>
+        </div>
+      </div>
 
-      <!-- Appointment Booking -->
       <div id="appointment" class="card hidden">
         <h3>Book Appointment</h3>
         <button onclick="fetchDetails()">Fetch Patient Details</button>
@@ -203,7 +225,7 @@
           <option value="">Select Disease</option>
           <option value="Cardiology">Cardiology</option>
           <option value="Neurology">Neurology</option>
-		  <option value="Pediatrics">Pediatrics</option>
+          <option value="Pediatrics">Pediatrics</option>
           <option value="Orthopedics">Orthopedics</option>
           <option value="Dermatology">Dermatology</option>
         </select>
@@ -216,13 +238,17 @@
         <button class="submit-btn" onclick="submitAppointment()">Submit Appointment</button>
       </div>
 
-      <!-- View Appointments -->
       <div id="view" class="card hidden">
         <h3>Appointments</h3>
         <div id="appointments">No appointments booked.</div>
       </div>
-    </div>
 
+      <div id="contacts" class="card hidden">
+        <h3>Hospital Contact Information</h3>
+        <p><strong>Address:</strong> <span th:text="${hospital.address}">123 Default Street</span></p>
+        <p><strong>Phone:</strong> <span th:text="${hospital.phoneNumber}">000-000-0000</span></p>
+      </div>
+    </div>
     <footer th:text="${hospital.address}">123 Health St, MedCity | Contact: 123-456-7890</footer>
   </div>
 

@@ -71,11 +71,22 @@ public class SecurityConfig {
                     "/doctor/dashboard"
                     ).authenticated()
             )
-            .formLogin(form -> form                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/dashboard", true)
-                    .failureUrl("/login?error=true")
-                ) 
+            .formLogin(form -> form
+            	    .loginPage("/login") // or use a shared login page
+            	    .successHandler((request, response, authentication) -> {
+            	        String role = authentication.getAuthorities().iterator().next().getAuthority();
+            	        if (role.equals("ROLE_PATIENT")) {
+            	            response.sendRedirect("/dashboard");
+            	        } else if (role.equals("ROLE_DOCTOR")) {
+            	            response.sendRedirect("/doctor/dashboard");
+            	        } else if (role.equals("ROLE_HOSPITAL")) {
+            	            response.sendRedirect("/hospital/dashboard");
+            	        } else {
+            	            response.sendRedirect("/login?error=true");
+            	        }
+            	    })
+            	)
+
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")

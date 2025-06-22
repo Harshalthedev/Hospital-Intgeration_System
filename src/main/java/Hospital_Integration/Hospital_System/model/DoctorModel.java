@@ -20,25 +20,26 @@ public class DoctorModel {
     @Column(name = "display_name", nullable = false)
     private String displayName;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private int hospitalId;
 
     @Column(nullable = false)
     private String specialization;
 
-    @Column
-    private String contact;
+    @Column(unique = true, nullable = false)
+    private Long contact;
     
     
 	public DoctorModel() {}
 	
-	public DoctorModel( String email, String password, String displayName, int hospitalId, String specialization) {
+	public DoctorModel( String email, String password, String displayName, int hospitalId, String specialization, Long contact) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.displayName = displayName;
 		this.hospitalId = hospitalId;
         this.specialization = specialization;
+        this.contact = contact;
 	}
 	
     public DoctorModel(String email, String password, int hospitalId, String specialization) {
@@ -50,11 +51,13 @@ public class DoctorModel {
 
     // Getters and Setters
 
+    
+    
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+	public void setId(Long id) {
         this.id = id;
     }
 
@@ -99,11 +102,11 @@ public class DoctorModel {
         this.specialization = specialization;
     }
 
-    public String getContact() {
+    public Long getContact() {
         return contact;
     }
 
-    public void setContact(String contact) {
+    public void setContact(Long contact) {
         this.contact = contact;
     }
     

@@ -63,7 +63,7 @@ public class DoctorController {
     @PostMapping("/signup")
     public RedirectView registerHospital(@ModelAttribute DoctorDto doctorDto, RedirectAttributes redirectAttributes) {
         try {
-        	doctorService.registerDoctor(doctorDto.getEmail(), doctorDto.getPassword(), doctorDto.getDisplayName(), doctorDto.gethospitalId(), doctorDto.getSpecialization());
+        	doctorService.registerDoctor(doctorDto.getEmail(), doctorDto.getPassword(), doctorDto.getDisplayName(), doctorDto.gethospitalId(), doctorDto.getSpecialization(), doctorDto.getContact());
             redirectAttributes.addFlashAttribute("successMessage", "User registered successfully! Please log in.");
             return new RedirectView("/doctor/login");
         } catch (RuntimeException e) {

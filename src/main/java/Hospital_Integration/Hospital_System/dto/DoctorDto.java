@@ -6,10 +6,19 @@ public class DoctorDto {
     private String displayName;
     private String specialization;
     private int hospitalId;
+    private Long contact;
+    
    
 	// Getters and Setters
+    
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public Long getContact() {
+		return contact;
+	}
+	public void setContact(Long contact) {
+		this.contact = contact;
+	}
+	public void setEmail(String email) { this.email = email; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
@@ -28,13 +37,14 @@ public class DoctorDto {
 	}
     
     
-	public DoctorDto(String email, String password, String displayName, int hospitalId, String specialization ) {
+	public DoctorDto(String email, String password, String displayName, int hospitalId, String specialization, Long contact) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.displayName = displayName;
 		this.hospitalId = hospitalId;
 		this.specialization = specialization;
+		this.contact = contact;
 
 
 	} 

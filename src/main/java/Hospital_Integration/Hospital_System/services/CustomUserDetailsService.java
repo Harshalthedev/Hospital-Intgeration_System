@@ -22,10 +22,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private DoctorRepo doctorRepo;
+
+    @Autowired
+    private HospitalRepo hospitalRepo;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
 
         UserModel patient = userRepo.findByEmail(email);
         if (patient != null) {
@@ -36,7 +40,25 @@ public class CustomUserDetailsService implements UserDetailsService {
             );
         }
 
-        // 4. If not found
-        throw new UsernameNotFoundException("User not found with email: " + email);
+        DoctorModel doctor = doctorRepo.findByEmail(email);
+        if (doctor != null) {
+            return new org.springframework.security.core.userdetails.User(
+                    doctor.getEmail(),
+                    doctor.getPassword(),
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_DOCTOR"))
+            );
+        }
+
+        HospitalModel hospital = hospitalRepo.findByEmail(email);
+        if (hospital != null) {
+            return new org.springframework.security.core.userdetails.User(
+                    hospital.getEmail(),
+                    hospital.getPassword(),
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_HOSPITAL"))
+            );
+        }
+
+        throw new UsernameNotFoundException("No user found with email: " + email);
     }
 }
+

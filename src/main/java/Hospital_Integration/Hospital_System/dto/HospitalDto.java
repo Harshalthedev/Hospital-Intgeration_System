@@ -7,9 +7,16 @@ public class HospitalDto {
     private String displayName;
     private int hospitalId;
     private String address;
+    private Long phoneNumber;
+    
 	
     
-    
+	public Long getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(Long phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -41,13 +48,14 @@ public class HospitalDto {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public HospitalDto(String email, String password, String displayName, int hospitalId, String address) {
+	public HospitalDto(String email, String password, String displayName, int hospitalId, String address, Long phoneNumber) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.displayName = displayName;
 		this.hospitalId = hospitalId;
 		this.address = address;
+		this.phoneNumber = phoneNumber;
 	} 
  
 }

@@ -1,204 +1,214 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Doctor Sign Up</title>
-    <style>
+	<title>Doctor Sign Up</title>
+	<style>
 		body {
-		            font-family: Arial, sans-serif;             
-		            background-image: url("/images/background.png");             
-		            background-repeat: no-repeat;             
-		            background-size: cover;
-		            background-attachment: fixed;
-		            margin: 0;
-		            padding: 0;
-		            display: flex;
-		            justify-content: center;
-		            align-items: center;
-		            height: 100vh;
-		            color: #0c0b0b;
-		            flex-direction: column;
-		        }
-		
-		        .signup-container {
-		            border: 1px solid black;
-					border-radius: 20px;
-		            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-		            padding: 30px;
-		            width: 100%;
-		            max-width: 500px;
-		            box-sizing: border-box;
-		            animation: fadeIn 0.5s ease-in-out;
-		        }
-		
-		        @keyframes fadeIn {
-		            from {
-		                opacity: 0;
-		                transform: scale(0.9);
-		            }
-		            to {
-		                opacity: 1;
-		                transform: scale(1);
-		            }
-		        }
-		
-		        h1 {
-		            font-size: 32px;
-		            margin-bottom: 20px;
-		            font-weight: bold;
-		        }
-		
-		        h2 {
-		            text-align: center;
-		            margin-bottom: 20px;
-					color: #033b49;
-		            font-size: 29px;
-		            font-weight: bold;
-		        }
-		
-		        .form-group {
-		            margin-bottom: 20px;
-		        }
-		
-		        label {
-		            display: block;
-		            margin-bottom: 8px;
-		            color: #0c0b0b;
-		            font-weight: bold;
-		        }
-		
-		        input[type="doctorId"],
-		        input[type="text"],
-				input[type="email"],
-		        input[type="password"] {
-		            width: 100%;
-				    padding: 12px;
-				    border: 1px solid #080808;
-				    border-radius: 5px;
-				    box-sizing: border-box;
-				    font-size: 14px;
-				    background: #e7dcdc;
-				    color: #070606;
-				    transition: border-color 0.3s, box-shadow 0.3s;
-		        }
-		
-		        input:focus {
-		            border-color: #007BFF;
-		            box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
-		            outline: none;
-		        }
-		
-		        button {
-		            width: 100%;
-		            padding: 12px;
-		            background: linear-gradient(135deg, #007BFF, #0056b3);
-		            color: white;
-		            border: none;
-		            border-radius: 5px;
-		            cursor: pointer;
-		            font-size: 16px;
-		            font-weight: bold;
-		            transition: background 0.3s ease-in-out;
-		        }
-		
-		        button:hover {
-		            background: linear-gradient(135deg, #0056b3, #003f7f);
-		        }
-		
-		        .error {
-		            color: #ff4d4d;
-		            margin-bottom: 15px;
-		            text-align: center;
-		            font-weight: bold;
-		        }
-		
-		        .login-link {
-		            text-align: center;
-		            margin-top: 15px;
-		        }
-		
-		        .login-link a {
-		            color: #007BFF;
-		            font-weight: bold;
-		            text-decoration: none;
-		            transition: color 0.3s;
-		        }
-		
-		        .login-link a:hover {
-		            text-decoration: underline;
-		            color: #0056b3;
-		        }
-		
-		        /* Responsive Design */
-		        @media (max-width: 480px) {
-		            .signup-container {
-		                padding: 20px;
-		                width: 90%;
-		            }
-		
-		            h1 {
-		                font-size: 26px;
-		            }
-		
-		            h2 {
-		                font-size: 20px;
-		            }
-		
-		            button {
-		                font-size: 14px;
-		            }
-		        }
-    </style>
+			font-family: Arial, sans-serif;
+			background-image: url("/images/background.png");
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-attachment: fixed;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			color: #0c0b0b;
+			flex-direction: column;
+		}
+
+		.signup-container {
+			border: 1px solid black;
+			border-radius: 20px;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+			padding: 30px;
+			width: 100%;
+			max-width: 500px;
+			box-sizing: border-box;
+			animation: fadeIn 0.5s ease-in-out;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: scale(0.9);
+			}
+
+			to {
+				opacity: 1;
+				transform: scale(1);
+			}
+		}
+
+		h1 {
+			font-size: 32px;
+			margin-bottom: 20px;
+			font-weight: bold;
+		}
+
+		h2 {
+			text-align: center;
+			margin-bottom: 20px;
+			color: #033b49;
+			font-size: 29px;
+			font-weight: bold;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			color: #0c0b0b;
+			font-weight: bold;
+		}
+
+		input[type="doctorId"],
+		input[type="text"],
+		input[type="email"],
+		input[type="password"] {
+			width: 100%;
+			padding: 12px;
+			border: 1px solid #080808;
+			border-radius: 5px;
+			box-sizing: border-box;
+			font-size: 14px;
+			background: #e7dcdc;
+			color: #070606;
+			transition: border-color 0.3s, box-shadow 0.3s;
+		}
+
+		input:focus {
+			border-color: #007BFF;
+			box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+			outline: none;
+		}
+
+		button {
+			width: 100%;
+			padding: 12px;
+			background: linear-gradient(135deg, #007BFF, #0056b3);
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			font-weight: bold;
+			transition: background 0.3s ease-in-out;
+		}
+
+		button:hover {
+			background: linear-gradient(135deg, #0056b3, #003f7f);
+		}
+
+		.error {
+			color: #ff4d4d;
+			margin-bottom: 15px;
+			text-align: center;
+			font-weight: bold;
+		}
+
+		.login-link {
+			text-align: center;
+			margin-top: 15px;
+		}
+
+		.login-link a {
+			color: #007BFF;
+			font-weight: bold;
+			text-decoration: none;
+			transition: color 0.3s;
+		}
+
+		.login-link a:hover {
+			text-decoration: underline;
+			color: #0056b3;
+		}
+
+		/* Responsive Design */
+		@media (max-width: 480px) {
+			.signup-container {
+				padding: 20px;
+				width: 90%;
+			}
+
+			h1 {
+				font-size: 26px;
+			}
+
+			h2 {
+				font-size: 20px;
+			}
+
+			button {
+				font-size: 14px;
+			}
+		}
+	</style>
 </head>
+
 <body>
-    <h1>Doctor Signup</h1>
-    <div class="signup-container">
-        <h2>Create an Account</h2>
+	<h1>Doctor Signup</h1>
+	<div class="signup-container">
+		<h2>Create an Account</h2>
 
-        <!-- Display signup errors if they exist -->
-        <div th:if="${errorMessage}" class="error">
-            <p th:text="${errorMessage}"></p>
-        </div>
+		<!-- Display signup errors if they exist -->
+		<div th:if="${errorMessage}" class="error">
+			<p th:text="${errorMessage}"></p>
+		</div>
 
-        <form th:action="@{/doctor/signup}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required placeholder="Enter your email" />
-            </div>
-			
-			<div class="form-group">
-			    <label for="password">Password:</label>
-			    <input type="password" id="password" name="password" required placeholder="Enter your password" />
-			</div>
-
-            <div class="form-group">
-                <label for="displayName">Display Name:</label>
-                <input type="text" id="displayName" name="displayName" required placeholder="Enter Doctor Name" />
-            </div>
-			
-
-            <div class="form-group">
-                <label for="hospitalId">Hospital ID:</label>
-                <input type="text" id="hospitalId" name="hospitalId" required placeholder="Enter Hospital ID" />
-            </div>
+		<form th:action="@{/doctor/signup}" method="post">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
 			<div class="form-group">
-			    <label for="specialization">Specialization:</label>
-			    <select id="specialization" name="specialization" required>
-			        <option value="">-- Select Specialization --</option>
-			        <option value="Cardiology">Cardiology</option>
-			        <option value="Neurology">Neurology</option>
-			        <option value="Pediatrics">Pediatrics</option>
-			    </select>
+				<label for="email">Email:</label>
+				<input type="email" id="email" name="email" required placeholder="Enter your email" />
 			</div>
 
-            <button type="submit" class="btn">Sign Up</button>
-        </form>
+			<div class="form-group">
+				<label for="password">Password:</label>
+				<input type="password" id="password" name="password" required placeholder="Enter your password" />
+			</div>
 
-        <div class="login-link">
-            <p>Already have an account? <a th:href="@{/doctor/login}">Login here</a>.</p>
-        </div>
-    </div>
+			<div class="form-group">
+				<label for="displayName">Display Name:</label>
+				<input type="text" id="displayName" name="displayName" required placeholder="Enter Doctor Name" />
+			</div>
+
+
+			<div class="form-group">
+				<label for="hospitalId">Hospital ID:</label>
+				<input type="text" id="hospitalId" name="hospitalId" required placeholder="Enter Hospital ID" />
+			</div>
+			<div class="form-group">
+				<label for="contact">Phone Number:</label>
+				<input type="text" id="contact" name="contact" required placeholder="Enter Phone Number" />
+			</div>
+
+			<div class="form-group">
+				<label for="specialization">Specialization:</label>
+				<select id="specialization" name="specialization" required>
+					<option value="">-- Select Specialization --</option>
+					<option value="Cardiology">Cardiology</option>
+					<option value="Neurology">Neurology</option>
+					<option value="Pediatrics">Pediatrics</option>
+					<option value="Dermatology">Dermatology</option>
+					<option value="Orthopedics">Orthopedics</option>
+				</select>
+			</div>
+
+			<button type="submit" class="btn">Sign Up</button>
+		</form>
+
+		<div class="login-link">
+			<p>Already have an account? <a th:href="@{/doctor/login}">Login here</a>.</p>
+		</div>
+	</div>
 </body>
+
 </html>

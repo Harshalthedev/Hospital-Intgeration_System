@@ -22,7 +22,7 @@ public class DoctorService {
     }
 
     // Method to register a new user
-    public DoctorModel registerDoctor(String email, String password, String displayName, int hospitalId, String specialization) {
+    public DoctorModel registerDoctor(String email, String password, String displayName, int hospitalId, String specialization, Long contact) {
         System.out.println("Hello iam in hospital register");
     	System.out.print(doctorRepo.findByEmail(email));
         if (doctorRepo.findByEmail(email) != null) {
@@ -40,7 +40,7 @@ public class DoctorService {
         
         String encodedPassword = passwordEncoder.encode(password);
 
-        DoctorModel doctor = new DoctorModel(email, encodedPassword, displayName, hospitalId, specialization);
+        DoctorModel doctor = new DoctorModel(email, encodedPassword, displayName, hospitalId, specialization, contact);
         return doctorRepo.save(doctor);
     }
     

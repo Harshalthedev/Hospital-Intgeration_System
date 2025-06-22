@@ -61,7 +61,7 @@ public class HospitalController {
     public RedirectView registerHospital(@ModelAttribute HospitalDto hospitalDto, RedirectAttributes redirectAttributes) {
         try {
             hospitalService.registerHospital(hospitalDto.getEmail(), hospitalDto.getPassword(),
-                    hospitalDto.getDisplayName(), hospitalDto.gethospitalId(), hospitalDto.getAddress());
+                    hospitalDto.getDisplayName(), hospitalDto.gethospitalId(), hospitalDto.getAddress(), hospitalDto.getPhoneNumber());
             redirectAttributes.addFlashAttribute("successMessage", "User registered successfully! Please log in.");
             return new RedirectView("/hospital/login");
         } catch (RuntimeException e) {
