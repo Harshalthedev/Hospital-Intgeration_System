@@ -4,110 +4,130 @@
   <meta charset="UTF-8">
   <title>Doctor Dashboard</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f6f8;
-    }
-
-    .layout {
-      display: flex;
-      height: 100vh;
-    }
-
-    .sidebar {
-      width: 220px;
-      background-color: #2c3e50;
-      color: #ecf0f1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .sidebar h2 {
-      font-size: 18px;
-      margin-bottom: 5px;
-    }
-
-    .sidebar .info {
-      margin-bottom: 30px;
-    }
-
-    .nav {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .nav .tab {
-      background-color: transparent;
-      padding: 10px;
-      border: none;
-      color: #ecf0f1;
-      text-align: left;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .nav .tab.active, .nav .tab:hover {
-      background-color: #3498db;
-    }
-
-    .logout-btn {
-      background-color: #e74c3c;
-      border: none;
-      padding: 10px;
-      color: white;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .content {
-      flex-grow: 1;
-      padding: 30px;
-      overflow-y: auto;
-    }
-
-    .card {
-      background: #fff;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .btn {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    .btn-accept { background-color: #2ecc71; }
-    .btn-decline { background-color: #e74c3c; }
-    .btn-submit { background-color: #3498db; }
-
-    .hidden { display: none; }
-
-    .appointment {
-      border-bottom: 1px solid #eee;
-      padding: 10px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    input[type="text"], input[type="password"], input[type="number"] {
-      padding: 6px;
-      width: 100%;
-      max-width: 300px;
-    }
-
-    .form-group {
-      margin-bottom: 10px;
-    }
+	body {
+	  margin: 0;
+	  font-family: Arial, sans-serif;
+	  background-color: #f4f6f8;
+	}
+	
+	.layout {
+	  display: flex;
+	  height: 100vh; 
+	}
+	
+	.sidebar {
+	  width: 250px;
+	  background-color: white;
+	  border-radius: 15px;
+	  color: rgb(4, 4, 4);
+	  font-size: 17px;
+	  font-weight: 550;
+	  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+	  padding: 20px;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: space-between;
+	}
+	
+	.sidebar h2 {
+	  font-size: 18px;
+	  margin-bottom: 5px;
+	}
+	
+	.sidebar .info {
+	  margin-bottom: 30px;
+	}
+	
+	.nav {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 10px;
+	}
+	
+	.nav .tab {
+	  background-color: transparent;
+	  padding: 10px;
+	  border: none;
+	  color: #0c0c0c;
+	  font-size: 16px;
+	  text-align: left;
+	  cursor: pointer;
+	  border-radius: 4px;
+	}
+	
+	.nav .tab.active{
+	  background-color: #80b0cf;
+	  color: #fff;
+	} 
+	
+	.nav .tab:hover {
+	  background-color: #80b0cf;
+	}
+	
+	.logout-btn {
+	  background-color: #ca1414;
+	  width: 150px;
+	  margin-left: 19%;
+	  border: solid 2px black;
+	  border-radius: 15px;
+	  padding: 8px;
+	  font-size: 17px;
+	  color: white;
+	  cursor: pointer;
+	  border-radius: 4px;
+	}
+	
+	.logout-btn:hover{
+	  background-color: #b31010;
+	}
+	
+	.content {
+	  flex-grow: 1;
+	  padding: 30px;
+	  overflow-y: auto;
+	}
+	
+	.card {
+	  background: #fff;
+	  padding: 20px;
+	  margin-bottom: 20px;
+	  border-radius: 10px;
+	  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+	}
+	
+	.btn {
+	  padding: 6px 12px;
+	  border: none;
+	  border-radius: 5px;
+	  cursor: pointer;
+	  font-size: 16px;
+	  color: #fff;
+	}
+	
+	.btn-accept { background-color: #0daa4f; }
+	.btn-decline { background-color: #ad2010; }
+	.btn-submit { background-color: #0d68a5; }
+	
+	.hidden { display: none; }
+	
+	.appointment {
+	  border-bottom: 2px solid #eee;
+	  padding: 10px 0;
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center;
+	}
+	
+	input[type="text"], input[type="password"], input[type="number"] {
+	  padding: 6px;
+	  border-radius: 5px;
+	  width: 100%;
+	  max-width: 300px;
+	}
+	
+	.form-group {
+	  margin-bottom: 20px;
+	}
   </style>
 </head>
 <body>
@@ -192,7 +212,7 @@
   }
 
   function loadAppointments() {
-    fetch('/api/doctor/appointments')
+    fetch('/doctor/appointments')
       .then(res => res.json())
       .then(appointments => {
         const container = document.getElementById('appointmentsContainer');

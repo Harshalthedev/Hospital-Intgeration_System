@@ -52,10 +52,12 @@ public class DoctorController {
     public ModelAndView showDashboardPage(HttpSession session) {
         String hospitalName = String.valueOf(session.getAttribute("hospitalName"));
         String doctorName = String.valueOf(session.getAttribute("doctorName"));
+        String hospitalId = String.valueOf(session.getAttribute("hospitalId"));
 
         ModelAndView modelAndView = new ModelAndView("doctor-dashboard");
         modelAndView.addObject("doctorName", doctorName);
         modelAndView.addObject("hospitalName", hospitalName);
+        modelAndView.addObject("hospitalId", hospitalId);
 
         return modelAndView;
     }

@@ -8,179 +8,184 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      display: flex;
-      height: 100vh;
-      background-color: #f5f7fa;
-      color: #212529;
-    }
-
-    .sidebar {
-      width: 240px;
-      background-color: #1f2937;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      padding: 30px 0;
-      gap: 10px;
-      transition: width 0.3s;
-    }
-
-    .sidebar h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 1.6em;
-      font-weight: bold;
-    }
-
-    .sidebar button {
-      background: none;
-      border: none;
-      color: white;
-      padding: 15px 25px;
-      font-size: 1em;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: background 0.2s ease;
-      cursor: pointer;
-    }
-
-    .sidebar button:hover {
-      background-color: #374151;
-    }
-
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .header {
-      background-color: #0d6efd;
-      color: white;
-      padding: 25px 40px;
-      font-size: 1.6em;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .content {
-      flex: 1;
-      padding: 30px 40px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-
-    .card {
-      background: white;
-      padding: 25px 30px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    }
-
-    .card h3 {
-      font-size: 1.3em;
-      margin-bottom: 20px;
-      font-weight: 600;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    input, select, button {
-      width: 80%;
-      padding: 8px;
-      margin-top: 10px;
-      border-radius: 8px;
-      border: 1px solid #ced4da;
-      font-size: 1em;
-    }
-
-    button.submit-btn {
-      background-color: #198754;
-      color: white;
-      border: none;
-      font-weight: bold;
-      margin-top: 20px;
-      transition: background-color 0.3s;
-    }
-
-    button.submit-btn:hover {
-      background-color: #157347;
-    }
-
-    .bed-card-container {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .bed-card {
-      flex: 1 1 200px;
-      padding: 20px;
-      border-radius: 12px;
-      color: white;
-      text-align: center;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-      font-size: 1.1em;
-      transition: transform 0.2s;
-    }
-
-    .bed-card:hover {
-      transform: translateY(-4px);
-    }
-
-    .bed-card h4 {
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
-    .bed-card.total {
-      background-color: #0d6efd;
-    }
-
-    .bed-card.available {
-      background-color: #198754;
-    }
-
-    .bed-card.occupied {
-      background-color: #dc3545;
-    }
-
-    footer {
-      background: #1f2937;
-      color: #ccc;
-      padding: 20px;
-      text-align: center;
-      font-size: 0.9em;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        display: none;
-      }
-
-      .header {
-        font-size: 1.2em;
-        padding: 20px;
-      }
-
-      .content {
-        padding: 20px;
-      }
-    }
+	* {
+	    margin: 0;
+	    padding: 0;
+	    box-sizing: border-box;
+	    font-family: Arial, sans-serif;
+	  }
+	
+	  body {
+	    display: flex;
+	    height: 100vh;
+	    background-color: #f5f7fa;
+	    color: #020202;
+	  }
+	
+	  .sidebar {
+	    width: 240px;
+	    background-color: white;
+	    color: rgb(10, 10, 10);
+	    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+	    border-radius: 15px;
+	    display: flex;
+	    flex-direction: column;
+	    padding: 30px 0;
+	    gap: 10px;
+	    transition: width 0.3s;
+	  }
+	
+	  .sidebar h2 {
+	    text-align: center;
+	    margin-bottom: 30px;
+	    font-size: 1.6em;
+	    font-weight: bold;
+	  }
+	
+	  .sidebar button {
+	    background: none;
+	    border: none;
+	    color: rgb(3, 3, 3);
+	    padding: 15px 25px;
+	    font-size: 16px;
+	    width: 100%;
+	    display: flex;
+	    align-items: center;
+	    gap: 12px;
+	    transition: background 0.2s ease;
+	    cursor: pointer;
+	  }
+	
+	  .sidebar button:hover{
+	    background-color: #80b0cf;
+	    color: white;
+	  }
+	
+	  .main {
+	    flex: 1;
+	    display: flex;
+	    flex-direction: column;
+	  }
+	
+	  .header {
+	    background-color: #d2e3fb;
+	    color: rgb(6, 6, 6);
+	    text-align: center;
+	    border-radius: 8px;
+	    padding: 25px 40px;
+	    font-size: 28px;
+	    font-weight: 600;
+	    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+	  }
+	
+	  .content {
+	    flex: 1;
+	    padding: 30px 40px;
+	    overflow-y: auto;
+	    display: flex;
+	    flex-direction: column;
+	    gap: 30px;
+	  }
+	
+	  .card {
+	    background: white;
+	    padding: 25px 30px;
+	    border-radius: 12px;
+	    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+	  }
+	
+	  .card h3 {
+	    font-size: 1.3em;
+	    margin-bottom: 20px;
+	    font-weight: 600;
+	  }
+	
+	  .hidden {
+	    display: none;
+	  }
+	
+	  input, select, button {
+	    width: 80%;
+	    padding: 8px;
+	    margin-top: 10px;
+	    border-radius: 8px;
+	    border: 1px solid #898b8d;
+	    font-size: 1em;
+	  }
+	
+	  button.submit-btn {
+	    background-color: #086138;
+	    color: white;
+	    border: none;
+	    font-weight: bold;
+	    margin-top: 20px;
+	    transition: background-color 0.3s;
+	  }
+	
+	  button.submit-btn:hover {
+	    background-color: #034526;
+	  }
+	
+	  .bed-card-container {
+	    display: flex;
+	    gap: 20px;
+	    flex-wrap: wrap;
+	  }
+	
+	  .bed-card {
+	    flex: 1 1 200px;
+	    padding: 20px;
+	    border-radius: 12px;
+	    color: white;
+	    text-align: center;
+	    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+	    font-size: 1.1em;
+	    transition: transform 0.2s;
+	  }
+	
+	  .bed-card:hover {
+	    transform: translateY(-4px);
+	  }
+	
+	  .bed-card h4 {
+	    margin-bottom: 10px;
+	    font-weight: 600;
+	  }
+	
+	  .bed-card.total {
+	    background-color: #1856b3;
+	  }
+	
+	  .bed-card.available {
+	    background-color: #0e7545;
+	  }
+	
+	  .bed-card.occupied {
+	    background-color: #9c1c29;
+	  }
+	
+	  footer {
+	    background: #030303;
+	    color: #ccc;
+	    padding: 20px;
+	    text-align: center;
+	    font-size: 0.9em;
+	  }
+	
+	  @media (max-width: 768px) {
+	    .sidebar {
+	      display: none;
+	    }
+	
+	    .header {
+	      font-size: 1.2em;
+	      padding: 20px;
+	    }
+	
+	    .content {
+	      padding: 20px;
+	    }
+	  }
   </style>
 </head>
 <body>
