@@ -1,58 +1,165 @@
-🏥 Hospital Integration System
-A comprehensive Hospital Integration System designed to enable hospitals across a city to efficiently share resources, track real-time bed availability, manage OPD queues, and schedule patient appointments. Built with Spring Boot and MySQL, this system enhances operational efficiency, streamlines patient management, and supports role-based access control for secure interactions.
+# 🏥 Hospital Integration System
 
-🚀 Key Features
-🛏️ Real-Time Bed Vacancy Updates: View available beds across various hospitals in real-time.
+**Centralized coordination across hospitals for emergencies, appointments, and real-time healthcare data.**
 
-📅 Patient Appointment Scheduling: Schedule, modify, and track patient appointments with ease.
+---
 
-🏥 OPD Queue Management: Efficiently manage and track patients in the OPD queue for timely care.
+## 🌟 Overview
 
-🔐 Role-Based Access Control (RBAC): Different roles (Admin, Doctor, Nurse, Receptionist) with restricted access to specific system functionalities.
+The **Hospital Integration System** is designed to unify all hospitals within a city or region under one digital platform. It empowers hospitals, doctors, patients, and government agencies to collaborate more effectively — especially crucial during healthcare emergencies such as the COVID-19 pandemic.
 
-🌍 City-Wide Hospital Integration: Connects multiple hospitals, enabling them to share resources, including available beds, doctors, and equipment.
+With real-time visibility into hospital resources, referrals, and appointments, the system improves patient outcomes and reduces administrative friction.
 
-🛠️ Tech Stack
-Backend: Spring Boot
+---
 
-Database: MySQL
+## 🔑 Key Features
 
-Authentication & Authorization: Spring Security, Role-Based Access Control (RBAC)
+### 👥 User Dashboard
 
-Others: JPA, Lombok, REST APIs
+* View all registered hospitals across the city
+* Search doctors by specialization
+* Book/view appointments with preferred doctors
 
-🧑‍💻 Getting Started
-1. Clone the repository
-bash
-Copy
-Edit
-git clone https://github.com/your-username/hospital-integration-system.git
-cd hospital-integration-system
-2. Configure MySQL
-Update your application.properties with your local or remote MySQL credentials.
+### 👨‍⚕️ Doctor Dashboard
 
-properties
-Copy
-Edit
-spring.datasource.url=jdbc:mysql://localhost:3306/hospital_system
-spring.datasource.username=your-username
-spring.datasource.password=your-password
-3. Run the application
-bash
-Copy
-Edit
-./mvnw spring-boot:run
-The app will be available at: http://localhost:8080
+* Manage OPD queues
+* View and update appointment statuses
+* Patient list access and schedule overview
 
-🏥 Features in Detail
-1. Real-Time Bed Vacancy Updates
-The system keeps track of bed availability in real-time, ensuring hospitals can optimize their space and provide timely care. Hospitals across the city can update their bed status, and others can see the changes instantly.
+### 🏨 Hospital Dashboard
 
-2. OPD Queue Management
-Managing OPD queues is streamlined, allowing receptionists and doctors to track patient flow, minimize waiting times, and ensure smoother hospital operations.
+* Refer emergency cases to other hospitals
+* Update bed and ICU availability
+* Manage doctors, patients, and appointments
+* Register new patients and handle internal data
 
-3. Appointment Scheduling
-Patients can schedule, cancel, or reschedule their appointments, and healthcare providers can efficiently manage their schedules.
+---
 
-4. Role-Based Access Control (RBAC)
-Roles such as Admin, Doctor, Nurse, and Receptionist are defined with specific access privileges to ensure that only authorized personnel can access sensitive data and perform critical operations.
+## 🧠 Tech Stack
+
+| Layer       | Technology                                             |
+| ----------- | ------------------------------------------------------ |
+| Backend     | Java, Spring Boot                                      |
+| Frontend    | HTML, CSS, JavaScript                                  |
+| Database    | MySQL, SQL                                             |
+| Tables Used | `users`, `patients`, `doctors`, `appointments`, `beds` |
+
+---
+
+## 🔄 System Flow
+
+```mermaid
+graph TD
+    A[Landing Page] --> B[Login Page]
+    B --> C1[User Dashboard]
+    B --> C2[Doctor Dashboard]
+    B --> C3[Hospital Dashboard]
+
+    C1 --> D1[View Hospitals]
+    C1 --> D2[Book Appointment]
+    C1 --> D3[View Appointments]
+
+    C2 --> E1[Manage OPD Queue]
+    C2 --> E2[Update Appointments]
+    C2 --> E3[View Patient Info]
+
+    C3 --> F1[Refer Emergency Patients]
+    C3 --> F2[Update Bed Status]
+    C3 --> F3[Manage Doctors/Users]
+    C3 --> F4[Register New Patients]
+```
+
+---
+
+## 🛠️ Project Structure
+
+```
+Hospital-Integration_System/
+├── backend/                  # Spring Boot backend (controllers, services, entities)
+├── frontend/                 # HTML, CSS, JS static frontend
+├── sql/                      # SQL schema and seed data
+├── docs/                     # Documentation, diagrams, planning
+└── README.md                 # This file
+```
+
+---
+
+## 🚀 Getting Started
+
+### ✅ Prerequisites
+
+* Java 11+ and Spring Boot
+* MySQL server running
+* Maven
+* IDE (IntelliJ, Eclipse)
+
+### 📂 Database Setup
+
+Create database and tables using the provided SQL schema:
+
+```sql
+CREATE DATABASE hospital_system;
+
+USE hospital_system;
+
+-- Example table
+CREATE TABLE users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(50),
+  password VARCHAR(100),
+  role ENUM('user', 'doctor', 'hospital')
+);
+-- Repeat for patients, doctors, appointments, beds
+```
+
+### 🔧 Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/Harshalthedev/Hospital-Intgeration_System.git
+cd Hospital-Intgeration_System
+
+# Open in your IDE and run the Spring Boot Application
+# Backend runs on: http://localhost:8080/
+```
+
+### 🌐 Access Frontend
+
+Open the frontend HTML files in your browser (or serve them via Spring Boot or any static server).
+
+---
+
+## 📈 Future Enhancements
+
+* API integration with ambulance dispatch
+* Mobile app support for patients
+* Role-based login with JWT auth
+* Patient history and prescriptions tracking
+* Push/SMS alerts for appointment and emergency updates
+
+---
+
+## 🤝 Contributing
+
+1. Fork this repository
+2. Create a new branch: `feature/your-feature-name`
+3. Commit your changes
+4. Open a pull request
+
+We welcome bug fixes, feature suggestions, or even UI enhancements.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 👨‍💻 Author
+
+**Harshal**
+GitHub: [@Harshalthedev](https://github.com/Harshalthedev)
+Project created with purpose and vision during public health crisis response.
+
+---
