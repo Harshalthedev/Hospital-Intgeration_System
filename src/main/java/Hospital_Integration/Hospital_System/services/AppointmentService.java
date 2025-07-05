@@ -37,5 +37,18 @@ public class AppointmentService {
 	public List<AppointmentModel> findByUserEmail(String email) {
 	    return appointmentRepo.findByUserEmail(email);
 	}
+	
+	public List<AppointmentModel> findByDoctorNameAndHospitalId(String doctorName, int hospitalId) {
+	    return appointmentRepo.findByDoctorNameAndHospitalId(doctorName, hospitalId);
+	}
+
+	public AppointmentModel updateAppointmentStatus(Long id, int status) {
+	    AppointmentModel appointment = appointmentRepo.findById(id)
+	        .orElseThrow(() -> new RuntimeException("Appointment not found with ID: " + id));
+
+	    appointment.setStatus(status);
+	    return appointmentRepo.save(appointment);
+	}
+
 
 }

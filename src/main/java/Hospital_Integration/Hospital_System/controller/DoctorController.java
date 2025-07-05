@@ -17,8 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import Hospital_Integration.Hospital_System.dto.DoctorDto;
+import Hospital_Integration.Hospital_System.model.AppointmentModel;
 import Hospital_Integration.Hospital_System.model.DoctorModel;
 import Hospital_Integration.Hospital_System.model.HospitalModel;
+import Hospital_Integration.Hospital_System.services.AppointmentService;
 import Hospital_Integration.Hospital_System.services.DoctorService;
 import Hospital_Integration.Hospital_System.services.HospitalService;
 import jakarta.servlet.http.HttpSession;
@@ -29,13 +31,15 @@ public class DoctorController {
 	
     @SuppressWarnings("unused")
 	private final PasswordEncoder passwordEncoder;
+    private final AppointmentService appointmentService;
 	private final DoctorService doctorService;
 	private final HospitalService hospitalService; 
 
-    public DoctorController(DoctorService doctorService, HospitalService hospitalService, PasswordEncoder passwordEncoder) {
+    public DoctorController(DoctorService doctorService, HospitalService hospitalService, PasswordEncoder passwordEncoder, AppointmentService appointmentService) {
         this.doctorService = doctorService;
         this.hospitalService = hospitalService;
 		this.passwordEncoder = passwordEncoder;
+		this.appointmentService = appointmentService;
     }
     
     @GetMapping("/signup")
@@ -101,5 +105,27 @@ public class DoctorController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+    
+    @GetMapping("/appointments")
+    public ResponseEntity<List<AppointmentModel>> getDoctorAppointments(HttpSession session) {
+        String doctorName = (String) session.getAttribute("doctorName");
+        int hospitalId = Integer.parseInt(session.getAttribute("hospitalId").toString());
+
+        List<AppointmentModel> appointments = appointmentService.findByDoctorNameAndHospitalId(doctorName, hospitalId);
+        return ResponseEntity.ok(appointments);
+    }
+
+    
+    @PostMapping("/appointments/{id}/status")
+    public ResponseEntity<AppointmentModel> updateAppointmentStatus(@PathVariable Long id, @RequestParam int status) {
+        if (status != 0 && status != 1) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        AppointmentModel updatedAppointment = appointmentService.updateAppointmentStatus(id, status);
+        return ResponseEntity.ok(updatedAppointment);
+    }
+
+
 
 }
