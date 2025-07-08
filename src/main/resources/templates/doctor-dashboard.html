@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8">
+   <meta name="_csrf" th:content="${_csrf.token}"/>
   <title>Doctor Dashboard</title>
   <style>
 	body {
@@ -246,17 +247,13 @@
   }
   
   function updateAppointmentStatus(id, status) {
-    fetch(`/doctor/appointments/${id}/status?status=${status}`, {
-      method: 'POST'
-    })
-    .then(response => {
-      if (response.ok) {
+	const response = fetch(`/doctor/appointments/${id}/${status}`)
+      if (!response.ok) {
         alert("Appointment status updated.");
         loadAppointments();
       } else {
         alert("Failed to update status.");
       }
-    });
   }
 
 

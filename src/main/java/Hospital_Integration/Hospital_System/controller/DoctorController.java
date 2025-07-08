@@ -116,8 +116,8 @@ public class DoctorController {
     }
 
     
-    @PostMapping("/appointments/{id}/status")
-    public ResponseEntity<AppointmentModel> updateAppointmentStatus(@PathVariable Long id, @RequestParam int status) {
+    @GetMapping("/appointments/{id}/{status}")
+    public ResponseEntity<AppointmentModel> updateAppointmentStatus(@PathVariable Long id, @PathVariable int status) {
         if (status != 0 && status != 1) {
             return ResponseEntity.badRequest().body(null);
         }
