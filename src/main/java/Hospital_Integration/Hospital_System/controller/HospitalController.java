@@ -12,8 +12,10 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import Hospital_Integration.Hospital_System.dto.BedUpdateRequest;
 import Hospital_Integration.Hospital_System.dto.HospitalDto;
+import Hospital_Integration.Hospital_System.model.AppointmentModel;
 import Hospital_Integration.Hospital_System.model.BedModel;
 import Hospital_Integration.Hospital_System.model.HospitalModel;
+import Hospital_Integration.Hospital_System.repository.AppointmentRepo;
 import Hospital_Integration.Hospital_System.repository.BedRepo;
 import Hospital_Integration.Hospital_System.repository.BedService;
 import Hospital_Integration.Hospital_System.services.BedServiceImpl;
@@ -28,14 +30,17 @@ public class HospitalController {
     private final PasswordEncoder passwordEncoder;
     private final BedService bedService; // ✅ Inject BedService
     private final BedRepo bedRepo;
+    private final AppointmentRepo appointmentRepo;
+
 
     public HospitalController(HospitalService hospitalService,
                               PasswordEncoder passwordEncoder,
                               BedServiceImpl bedService,
-                              BedRepo bedRepo) {
+                              BedRepo bedRepo, AppointmentRepo appointmentRepo) {
         this.hospitalService = hospitalService;
         this.passwordEncoder = passwordEncoder;
         this.bedService = bedService;
+        this.appointmentRepo = appointmentRepo;
         this.bedRepo = bedRepo;// ✅ Initialize it
     }
 
@@ -85,6 +90,11 @@ public class HospitalController {
             return redirectView;
         }
     }
+    
+//    @PostMapping("/resetPassword")
+//    public RedirectView resetpassword(@RequestParam String email, @RequestParam String password,  RedirectAttributes redirectAttributes) {
+//    	
+//    }
 
     @GetMapping("/dashboard")
     public ModelAndView dashboard(HttpSession session) {
@@ -98,7 +108,7 @@ public class HospitalController {
         return modelAndView;
     }
 
-    @GetMapping("/details/{hospitalId}")
+    @GetMapping("/details/{hospitalId}") // info fetched by user
     public ModelAndView showHospitalDetails(@PathVariable int hospitalId, HttpSession session) {
         HospitalModel hospital = hospitalService.findByHospitalId(hospitalId);
         BedModel bed = bedRepo.findByHospitalId(hospitalId);
@@ -120,6 +130,25 @@ public class HospitalController {
         mav.addObject("userAge", session.getAttribute("userAge"));
         mav.addObject("userGender", session.getAttribute("userGender"));
         mav.addObject("hospitalId", hospitalId);
+
+        return mav;
+    }
+    
+    @GetMapping("/detail/{hospitalId}") // info fetched by hospitals
+    public ModelAndView showHospitalDetails2(@PathVariable int hospitalId, HttpSession session) {
+        HospitalModel hospital = hospitalService.findByHospitalId(hospitalId);
+        BedModel bed = bedRepo.findByHospitalId(hospitalId);
+
+        int totalBeds = bed.getTotalBeds();
+        int occupiedBeds = bed.getOccupiedBeds();
+        int availableBeds = totalBeds - occupiedBeds;
+
+        ModelAndView mav = new ModelAndView("hospital-hospitalDashBoard");
+        mav.addObject("hospital", hospital);
+        mav.addObject("hospitalId", hospitalId);
+        mav.addObject("totalBeds", totalBeds);
+        mav.addObject("occupiedBeds", occupiedBeds);
+        mav.addObject("availableBeds", availableBeds);
 
         return mav;
     }
@@ -161,5 +190,10 @@ public class HospitalController {
         return ResponseEntity.ok(bed);
     }
     
+    @GetMapping("/appointments/by-hospital/{hospitalId}")
+    public ResponseEntity<List<AppointmentModel>> getAppointmentsByHospital(@PathVariable int hospitalId) {
+        List<AppointmentModel> appointments = appointmentRepo.findUsersByHospitalId(hospitalId);
+        return ResponseEntity.ok(appointments);
+    }
 
 }

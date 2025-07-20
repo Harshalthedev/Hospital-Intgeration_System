@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Hospital Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #086138;
+      --primary-hover: #034526;
+      --secondary: #f5f7fa;
+      --accent: #1e90ff;
+      --bg: #f5f7fa;
+      --text: #1a1a1a;
+      --card-bg: white;
+      --shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      --font: 'Segoe UI', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font);
+    }
+
+    body {
+      background-color: var(--bg);
+      display: flex;
+      min-height: 100vh;
+      color: var(--text);
+    }
+
+    .sidebar {
+      width: 260px;
+      background: white;
+      box-shadow: var(--shadow);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 8px;
+      color: var(--text);
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .main {
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .header {
+      background-color: #d2e3fb;
+      padding: 1.5rem;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .content {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .content.active {
+      display: flex;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .bed-card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .bed-card {
+      flex: 1 1 200px;
+      background-color: var(--accent);
+      color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+    }
+
+    .bed-card:hover {
+      transform: scale(1.03);
+    }
+
+    .bed-card.total { background: #1856b3; }
+    .bed-card.available { background: #0e7545; }
+    .bed-card.occupied { background: #9c1c29; }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #030303;
+      color: #ccc;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Dashboard</h2>
+    <button class="nav-btn active" onclick="showTab('beds')"><i class="fas fa-bed"></i> Beds</button>
+    <button class="nav-btn" onclick="showTab('contacts')"><i class="fas fa-address-book"></i> Contact Info</button>
+  </div>
+
+  <div class="main">
+    <div class="header" th:text="${hospital.displayName}">Hospital Name</div>
+
+    <!-- Beds Tab -->
+    <div class="content active" id="beds">
+      <div class="card">
+        <h3>Bed Status</h3>
+        <div class="bed-card-container">
+          <div class="bed-card total">
+            <h4>Total Beds</h4>
+            <p th:text="${totalBeds}">100</p>
+          </div>
+          <div class="bed-card available">
+            <h4>Available Beds</h4>
+            <p th:text="${availableBeds}">40</p>
+          </div>
+          <div class="bed-card occupied">
+            <h4>Occupied Beds</h4>
+            <p th:text="${occupiedBeds}">60</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Info Tab -->
+    <div class="content" id="contacts">
+      <div class="card">
+        <h3>Hospital Contact Information</h3>
+        <p><strong>Address:</strong> <span th:text="${hospital.address}">123 Default Street</span></p>
+        <p><strong>Phone:</strong> <span th:text="${hospital.phoneNumber}">000-000-0000</span></p>
+      </div>
+    </div>
+
+    <footer th:text="${hospital.address}">123 Health St, MedCity | Contact: 123-456-7890</footer>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.content');
+      const buttons = document.querySelectorAll('.nav-btn');
+
+      tabs.forEach(tab => tab.classList.remove('active'));
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

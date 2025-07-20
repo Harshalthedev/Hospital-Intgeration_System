@@ -38,6 +38,10 @@ public class AppointmentService {
 	    return appointmentRepo.findByUserEmail(email);
 	}
 	
+	public List<AppointmentModel> findByDoctorNameAndStatus(String doctorName, int status) {
+	    return appointmentRepo.findByDoctorNameAndStatus(doctorName, status);
+	}
+	
 	public List<AppointmentModel> findByDoctorNameAndHospitalId(String doctorName, int hospitalId) {
 	    return appointmentRepo.findByDoctorNameAndHospitalId(doctorName, hospitalId);
 	}

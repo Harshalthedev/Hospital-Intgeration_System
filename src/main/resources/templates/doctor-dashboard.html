@@ -2,166 +2,163 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8">
-   <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
   <title>Doctor Dashboard</title>
   <style>
-	body {
-	  margin: 0;
-	  font-family: Arial, sans-serif;
-	  background-color: #f4f6f8;
-	}
-	
-	.layout {
-	  display: flex;
-	  height: 100vh; 
-	}
-	
-	.sidebar {
-	  width: 250px;
-	  background-color: white;
-	  border-radius: 15px;
-	  color: rgb(4, 4, 4);
-	  font-size: 17px;
-	  font-weight: 550;
-	  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-	  padding: 20px;
-	  display: flex;
-	  flex-direction: column;
-	  justify-content: space-between;
-	}
-	
-	.sidebar h2 {
-	  font-size: 18px;
-	  margin-bottom: 5px;
-	}
-	
-	.sidebar .info {
-	  margin-bottom: 30px;
-	}
-	
-	.nav {
-	  display: flex;
-	  flex-direction: column;
-	  gap: 10px;
-	}
-	
-	.nav .tab {
-	  background-color: transparent;
-	  padding: 10px;
-	  border: none;
-	  color: #0c0c0c;
-	  font-size: 16px;
-	  text-align: left;
-	  cursor: pointer;
-	  border-radius: 4px;
-	}
-	
-	.nav .tab.active{
-	  background-color: #80b0cf;
-	  color: #fff;
-	} 
-	
-	.nav .tab:hover {
-	  background-color: #80b0cf;
-	}
-	
-	.logout-btn {
-	  background-color: #ca1414;
-	  width: 150px;
-	  margin-left: 19%;
-	  border: solid 2px black;
-	  border-radius: 15px;
-	  padding: 8px;
-	  font-size: 17px;
-	  color: white;
-	  cursor: pointer;
-	  border-radius: 4px;
-	}
-	
-	.logout-btn:hover{
-	  background-color: #b31010;
-	}
-	
-	.content {
-	  flex-grow: 1;
-	  padding: 30px;
-	  overflow-y: auto;
-	}
-	
-	.card {
-	  background: #fff;
-	  padding: 20px;
-	  margin-bottom: 20px;
-	  border-radius: 10px;
-	  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-	}
-	
-	.btn {
-	  padding: 6px 12px;
-	  border: none;
-	  border-radius: 5px;
-	  cursor: pointer;
-	  font-size: 16px;
-	  color: #fff;
-	}
-	
-	.btn-accept { background-color: #0daa4f; }
-	.btn-decline { background-color: #ad2010; }
-	.btn-submit { background-color: #0d68a5; }
-	
-	.hidden { display: none; }
-	
-	.appointment {
-	  border-bottom: 2px solid #eee;
-	  padding: 10px 0;
-	  display: flex;
-	  justify-content: space-between;
-	  align-items: center;
-	}
-	
-	input[type="text"], input[type="password"], input[type="number"] {
-	  padding: 6px;
-	  border-radius: 5px;
-	  width: 100%;
-	  max-width: 300px;
-	}
-	
-	.form-group {
-	  margin-bottom: 20px;
-	}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+    }
+
+    .layout { display: flex; height: 100vh; }
+    .sidebar {
+      width: 250px;
+      background-color: white;
+      border-radius: 15px;
+      color: rgb(4, 4, 4);
+      font-size: 17px;
+      font-weight: 550;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sidebar h2 { font-size: 18px; margin-bottom: 5px; }
+    .sidebar .info { margin-bottom: 30px; }
+
+    .nav { display: flex; flex-direction: column; gap: 10px; }
+    .nav .tab {
+      background-color: transparent;
+      padding: 10px;
+      border: none;
+      color: #0c0c0c;
+      font-size: 16px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .nav .tab.active { background-color: #80b0cf; color: #fff; }
+    .nav .tab:hover { background-color: #80b0cf; }
+
+    .logout-btn {
+      background-color: #ca1414;
+      width: 150px;
+      margin-left: 19%;
+      border: solid 2px black;
+      border-radius: 15px;
+      padding: 8px;
+      font-size: 17px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover { background-color: #b31010; }
+
+    .content {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .card.show {
+      opacity: 1;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .btn-accept { background-color: #0daa4f; }
+    .btn-decline { background-color: #ad2010; }
+    .btn-submit { background-color: #0d68a5; }
+
+    .hidden { display: none; }
+
+    .appointment {
+      border-bottom: 2px solid #eee;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .loading-spinner {
+      text-align: center;
+      font-style: italic;
+      color: #777;
+    }
+
+    input[type="text"], input[type="password"] {
+      padding: 6px;
+      border-radius: 5px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .form-group { margin-bottom: 20px; }
   </style>
 </head>
 <body>
 
 <div class="layout">
-  <!-- Sidebar -->
   <div class="sidebar">
     <div>
-		<div class="info">
-		  <h2>👨‍⚕️ Dr. <span th:text="${doctorName}">Doctor Name</span></h2>
-		  <p>🏥 <span th:text="${hospitalName}">Hospital Name</span></p>
-		</div>
+      <div class="info">
+		<h2>👨‍⚕️ Dr. <span id="doctorName" th:text="${doctorName}">Doctor Name</span></h2>
+        <p>🏥 <span th:text="${hospitalName}">Hospital Name</span></p>
+      </div>
       <div class="nav">
-        <button class="tab active" onclick="showTab('appointmentsTab')">Appointments</button>
+        <button class="tab active" onclick="showTab('newTab')">New Appointments</button>
+        <button class="tab" onclick="showTab('appointedTab')">Appointed Patients</button>
+        <button class="tab" onclick="showTab('treatedTab')">Treatment Done</button>
         <button class="tab" onclick="showTab('opdTab')">OPD Queue</button>
         <button class="tab" onclick="showTab('detailsTab')">My Details</button>
       </div>
     </div>
-
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
-  <!-- Content -->
   <div class="content">
-    <!-- Appointments -->
-    <div id="appointmentsTab" class="tabContent">
-      <div class="card">
-        <h3>Upcoming Appointments</h3>
-        <div id="appointmentsContainer">Loading appointments...</div>
+    <div id="newTab" class="tabContent">
+      <div class="card" id="newAppointmentsCard">
+        <h3>New Appointments</h3>
+        <div id="newAppointmentsContainer" class="card-body"></div>
       </div>
     </div>
 
-    <!-- OPD Queue -->
+    <div id="appointedTab" class="tabContent hidden">
+      <div class="card" id="appointedAppointmentsCard">
+        <h3>Appointed Patients</h3>
+        <div id="appointedAppointmentsContainer" class="card-body"></div>
+      </div>
+    </div>
+
+    <div id="treatedTab" class="tabContent hidden">
+      <div class="card" id="treatedAppointmentsCard">
+        <h3>Past Patients</h3>
+        <div id="treatedAppointmentsContainer" class="card-body"></div>
+      </div>
+    </div>
+
     <div id="opdTab" class="tabContent hidden">
       <div class="card">
         <h3>Current OPD Queue</h3>
@@ -169,7 +166,6 @@
         <p><strong>Patients in Queue:</strong></p>
         <ul id="queueList"></ul>
       </div>
-
       <div class="card">
         <h3>Manual OPD Number Entry (Offline Patients)</h3>
         <form id="opdForm">
@@ -179,49 +175,63 @@
       </div>
     </div>
 
-    <!-- Details -->
     <div id="detailsTab" class="tabContent hidden">
       <div class="card">
-        <h3>Update My Details</h3>
-        <form id="detailsForm">
-			<div class="form-group">
-			  <label>Full Name (readonly)</label><br/>
-			  <input type="text" id="detailName" th:value="${doctorName}" disabled />
-			</div>
-			<div class="form-group">
-			  <label>Contact</label><br/>
-			  <input type="text" id="detailContact" th:value="${doctorContact}" required />
-			</div>
-          <div class="form-group">
-            <label>New Password</label><br/>
-            <input type="password" id="detailPassword" placeholder="Leave blank to keep current" />
-          </div>
-          <button type="submit" class="btn btn-submit">Update Details</button>
-        </form>
+		<h3>Update My Details</h3>
+		<form id="detailsForm">
+		  <div class="form-group">
+		    <label>Full Name (readonly)</label><br/>
+		    <input type="text" id="detailName" th:value="${doctorName}" value="Doctor Name" disabled />
+		  </div>
+		  <div class="form-group">
+		    <label>Contact</label><br/>
+		    <input type="text" id="detailContact" th:value="${doctorContact}" required />
+		  </div>
+		  <div class="form-group">
+		    <label>New Password</label><br/>
+		    <input type="password" id="detailPassword" placeholder="Leave blank to keep current" />
+		  </div>
+		  <button type="submit" class="btn btn-submit">Update Details</button>
+		</form>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  function showTab(tabId) {
-    document.querySelectorAll('.tabContent').forEach(t => t.classList.add('hidden'));
-    document.getElementById(tabId).classList.remove('hidden');
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    const tabs = ['appointmentsTab', 'opdTab', 'detailsTab'];
-    document.querySelectorAll('.tab')[tabs.indexOf(tabId)].classList.add('active');
+let currentTabId = 'newTab';
+
+function showTab(tabId) {
+  document.querySelectorAll('.tabContent').forEach(t => t.classList.add('hidden'));
+  document.getElementById(tabId).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+  const tabOrder = ['newTab', 'appointedTab', 'treatedTab', 'opdTab', 'detailsTab'];
+  const index = tabOrder.indexOf(tabId);
+  if (index !== -1) {
+    document.querySelectorAll('.tab')[index].classList.add('active');
+    currentTabId = tabId;
   }
 
-  function loadAppointments() {
-    fetch('/doctor/appointments') // This should call your Spring endpoint
-      .then(res => res.json())
-      .then(appointments => {
-        const container = document.getElementById('appointmentsContainer');
-        container.innerHTML = '';
-        if (!appointments || appointments.length === 0) {
-          container.innerHTML = '<p>No appointments.</p>';
-          return;
-        }
+  loadAppointmentsForCurrentTab();
+}
+
+function fetchAppointmentsByStatus(status, containerId, actionButtonText, nextStatus) {
+  const container = document.getElementById(containerId);
+  const card = container.closest('.card');
+  card.classList.remove('show');
+  container.innerHTML = `<div class="loading-spinner">Loading appointments...</div>`;
+
+  const doctorName = document.getElementById("doctorName").innerText.trim();
+  const encodedDoctorName = encodeURIComponent(doctorName);
+
+  fetch(`/doctor/appointment/${status}/${encodedDoctorName}`)
+    .then(res => res.json())
+    .then(appointments => {
+      container.innerHTML = '';
+      if (!appointments || appointments.length === 0) {
+        container.innerHTML = '<p>No appointments.</p>';
+      } else {
         appointments.forEach(app => {
           const div = document.createElement('div');
           div.className = 'appointment';
@@ -230,103 +240,86 @@
               <strong>${app.userName}</strong> (${app.userAge}, ${app.userGender})<br/>
               Disease: ${app.userDisease}<br/>
               Date: ${new Date(app.appointmentDate).toLocaleDateString()}<br/>
-              Status: <span style="color: ${app.status === 1 ? 'green' : 'red'};">
-                        ${app.status === 1 ? 'Appointed' : 'Pending'}
-                      </span>
+              Status: ${status === 0 ? 'Pending' : status === 1 ? 'Appointed' : 'Treated'}
             </div>
             <div>
-              ${app.status === 0
-                ? `<button class="btn btn-accept" onclick="updateAppointmentStatus(${app.id}, 1)">Mark Appointed</button>`
-                : ''
-              }
+              ${actionButtonText ? `<button class="btn btn-submit" onclick="updateAppointmentStatus(${app.id}, ${nextStatus})">${actionButtonText}</button>` : ''}
             </div>
           `;
           container.appendChild(div);
         });
-      });
-  }
-  
-  function updateAppointmentStatus(id, status) {
-	const response = fetch(`/doctor/appointments/${id}/${status}`)
-      if (!response.ok) {
+      }
+      setTimeout(() => card.classList.add('show'), 50);
+    })
+    .catch(err => {
+      console.error("Failed to load appointments", err);
+      container.innerHTML = '<p>Error loading appointments.</p>';
+    });
+}
+
+
+function updateAppointmentStatus(id, status) {
+  fetch(`/doctor/appointments/${id}/${status}`, { method: 'GET' })
+    .then(res => {
+      if (res.ok) {
         alert("Appointment status updated.");
-        loadAppointments();
+        loadAppointmentsForCurrentTab();
       } else {
         alert("Failed to update status.");
       }
-  }
-
-
-
-  function respondAppointment(id, accept) {
-    fetch(`/api/doctor/appointments/${id}/${accept ? 'accept' : 'decline'}`, {
-      method: 'POST'
-    }).then(() => {
-      loadAppointments();
-      if (accept) {
-        fetch(`/api/doctor/appointments/${id}/queue`, { method: 'POST' }).then(() => loadOPDQueue());
-      }
+    })
+    .catch(err => {
+      console.error("Error updating appointment", err);
+      alert("Something went wrong.");
     });
-  }
+}
 
-  function loadOPDQueue() {
-    fetch('/api/doctor/opd/queue')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('currentQueue').textContent = data.currentNumber || '0';
-        const queueList = document.getElementById('queueList');
-        queueList.innerHTML = '';
-        if (data.patients.length === 0) {
-          queueList.innerHTML = '<li>No patients in queue.</li>';
-          return;
-        }
-        data.patients.forEach((patient, index) => {
-          const li = document.createElement('li');
-          li.textContent = `${index + 1}. ${patient}`;
-          queueList.appendChild(li);
-        });
-      });
+function loadAppointmentsForCurrentTab() {
+  if (currentTabId === 'newTab') {
+    fetchAppointmentsByStatus(0, 'newAppointmentsContainer', 'Mark Appointed', 1);
+  } else if (currentTabId === 'appointedTab') {
+    fetchAppointmentsByStatus(1, 'appointedAppointmentsContainer', 'Mark Treated', 2);
+  } else if (currentTabId === 'treatedTab') {
+    fetchAppointmentsByStatus(2, 'treatedAppointmentsContainer', null, null);
   }
+}
 
-  document.getElementById('opdForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const name = document.getElementById('offlinePatientName').value;
-    fetch('/api/doctor/opd/manual', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ patientName: name })
-    }).then(() => {
-      document.getElementById('offlinePatientName').value = '';
-      loadOPDQueue();
-    });
+function logout() {
+  fetch('/api/logout', { method: 'POST' }).then(() => window.location.href = '/login');
+}
+
+document.getElementById('detailsForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const contact = document.getElementById('detailContact').value;
+  const password = document.getElementById('detailPassword').value;
+  const payload = { contact };
+  if (password.trim() !== '') payload.password = password;
+
+  fetch('/api/doctor/update', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    alert('Details updated.');
+    document.getElementById('detailPassword').value = '';
   });
+});
 
-  document.getElementById('detailsForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const contact = document.getElementById('detailContact').value;
-    const password = document.getElementById('detailPassword').value;
-    const payload = { contact };
-    if (password.trim() !== '') payload.password = password;
+// OPD Queue logic
+function loadOPDQueue() {
+  // Stub - implement if needed
+}
 
-    fetch('/api/doctor/update', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(() => {
-      alert('Details updated successfully.');
-      document.getElementById('detailPassword').value = '';
-    });
-  });
+document.getElementById('opdForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('offlinePatientName').value;
+  // Send to backend if needed
+  document.getElementById('offlinePatientName').value = '';
+});
 
-  function logout() {
-    fetch('/api/logout', { method: 'POST' })
-      .then(() => window.location.href = '/login');
-  }
-
-  // Initial load
-  loadAppointments();
-  loadOPDQueue();
-  setInterval(loadOPDQueue, 10000);
+// Initial Load
+showTab('newTab');
+setInterval(loadOPDQueue, 10000);
 </script>
 
 </body>

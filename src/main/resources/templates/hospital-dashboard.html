@@ -240,6 +240,22 @@
 		    padding: 1.2rem;
 		    margin: 1rem;
 		  }
+		  
+		  .user-tab-btn {
+		    padding: 0.5rem 1rem;
+		    margin-right: 10px;
+		    border: none;
+		    background: #d9e7f5;
+		    color: #0a0a0a;
+		    border-radius: 6px;
+		    font-weight: 600;
+		    cursor: pointer;
+		  }
+		  
+		  .user-tab-btn.active {
+		    background-color: #3498db;
+		    color: white;
+		  }
 		}
 
   </style>
@@ -358,58 +374,78 @@
 	  }
 
 
-      if (tab === "hospitals") {
-        const content = document.getElementById("content");
-        content.innerHTML = `
-          <h2>🏥 All Hospitals</h2>
-          <ul id="hospital-list" class="hospital-list"></ul>
-        `;
-
-        async function fetchHospitalList() {
-		const currentHospitalId = document.getElementById("data-holder").dataset.hospitalId;
-
-          try {
-            const response = await fetch('/hospital/available-hospitals');
-            if (!response.ok) throw new Error('Failed to fetch hospitals');
-
-            const hospitals = await response.json();
-            const hospitalList = document.getElementById('hospital-list');
-            hospitalList.innerHTML = '';
-
-            hospitals.forEach((hospital) => {
-				if (hospital.hospitalId != currentHospitalId) {
-	              const hospitalItem = document.createElement('li');
-	              hospitalItem.className = 'room-item';
-	              hospitalItem.innerHTML = `
-	                <span>${hospital.displayName}</span>
-	                <div class="room-actions">
-	                  <button onclick="showRoomPage('${hospital.hospitalId}')">Show Details</button>
-	                </div>
-	              `;
-	              hospitalList.appendChild(hospitalItem);
-	            }
-			}
-			);
-          } catch (error) {
-            console.error('Error fetching hospitals:', error);
-            alert('Could not load hospitals. Please try again later.');
-          }
-        }
-
-        function showRoomPage(hospitalId) {
-          window.location.href = `/hospital/details/${hospitalId}`;
-        }
-
-        fetchHospitalList();
-      }
+	  if (tab === "hospitals") {
+	      const content = document.getElementById("content");
+	      content.innerHTML = `
+	        <h2>🏥 All Hospitals</h2>
+	        <ul id="hospital-list" class="hospital-list"></ul>
+	      `;
+	  
+	      async function fetchHospitalList() {
+	          const currentHospitalId = document.getElementById("data-holder").dataset.hospitalId;
+	  
+	          try {
+	              const response = await fetch('/hospital/available-hospitals');
+	              console.log('Response:', response);
+	              
+	              if (!response.ok) {
+	                  console.error('Failed to fetch hospitals:', response.status, response.statusText);
+	                  throw new Error('Failed to fetch hospitals');
+	              }
+	  
+	              const hospitals = await response.json();	  
+	              const hospitalList = document.getElementById('hospital-list');
+	              hospitalList.innerHTML = ''; 
+	  
+	              hospitals.forEach((hospital) => {
+	                  const hospitalItem = document.createElement('li');
+	                  hospitalItem.className = 'room-item';
+	  
+	                  hospitalItem.innerHTML = `
+	                      <span>${hospital.displayName}</span>
+	                      <div class="room-actions">
+	                          <button onclick="showRoomPage('${hospital.hospitalId}')">Show Details</button>
+	                      </div>
+	                  `;
+	  
+	                  hospitalList.appendChild(hospitalItem);
+	              });
+	          } catch (error) {
+	              console.error('Error fetching hospitals:', error);
+	              alert('Could not load hospitals. Please try again later.');
+	          }
+	      }
+	  
+	      fetchHospitalList();
+	  }
 
       if (tab === "doctors") {
         fetchDoctorList();
       }
 
-      if (tab === "users") {
-        content.innerHTML = `<h2>👤 Users</h2><p>Feature under development...</p>`;
-      }
+	  if (tab === "users") {
+	    const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
+	    content.innerHTML = `
+	      <h2>👤 Users</h2>
+	      <div style="margin-bottom: 1rem;">
+	        <button id="appointed-tab" class="user-tab-btn active" onclick="switchUserTab('appointed')">🕒 Appointed</button>
+	        <button id="treated-tab" class="user-tab-btn" onclick="switchUserTab('treated')">✅ Treated</button>
+	      </div>
+	      <div id="user-list" class="card-grid"></div>
+	    `;
+	  
+	    fetch(`/hospital/appointments/by-hospital/${hospitalId}`)
+	      .then(res => res.json())
+	      .then(data => {
+	        window.allAppointments = data;
+	        renderUsers("appointed");
+	      })
+	      .catch(err => {
+	        console.error("Error fetching users:", err);
+	        document.getElementById("user-list").innerHTML = `<p>Error loading users. Try again later.</p>`;
+	      });
+	  }
+
 
       if (tab === "refer") {
         const content = document.getElementById("content");
@@ -560,10 +596,43 @@
 	  }
 	}
 
-
-
-
     showTab("home");
+	function showRoomPage(hospitalId) {
+	    window.location.href = `/hospital/detail/${hospitalId}`;
+	}
+	function switchUserTab(type) {
+	  document.getElementById("appointed-tab").classList.remove("active");
+	  document.getElementById("treated-tab").classList.remove("active");
+	  document.getElementById(`${type}-tab`).classList.add("active");
+	
+	  renderUsers(type);
+	}
+	
+	function renderUsers(type) {
+	  const list = document.getElementById("user-list");
+	  if (!window.allAppointments) return;
+	
+	  const statusCode = type === "appointed" ? 1 : 2;
+	  const filtered = window.allAppointments.filter(user => user.status === statusCode);
+	
+	  if (filtered.length === 0) {
+	    list.innerHTML = `<p>No ${type} patients found.</p>`;
+	    return;
+	  }
+	
+	  list.innerHTML = filtered.map(user => `
+	    <div class="card">
+	      <h3>${user.userName} (${user.userGender}, ${user.userAge} yrs)</h3>
+	      <p><strong>Email:</strong> ${user.userEmail}</p>
+	      <p><strong>Disease:</strong> ${user.userDisease}</p>
+	      <p><strong>Doctor:</strong> ${user.doctorName || 'N/A'}</p>
+	      <p><strong>Status:</strong> ${statusCode === 1 ? "Appointed" : "Treated"}</p>
+	      <p><strong>Appointment Date:</strong> ${new Date(user.appointmentDate).toLocaleDateString()}</p>
+	    </div>
+	  `).join("");
+	}
+
+
   </script>
 </body>
 </html>

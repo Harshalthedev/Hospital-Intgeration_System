@@ -378,6 +378,8 @@
 	    const result = await response.text();
 	    if (response.ok) {
 	      alert("Success: " + result);
+	      // Delay for 1 second before reloading
+	      setTimeout(() => window.location.reload(), 1000);
 	    } else {
 	      alert("Error: " + result);
 	    }
@@ -387,6 +389,7 @@
 	    alert('Something went wrong. Please try again.');
 	  }
 	}
+
 	
 	async function fetchAppointments() {
 	  const holder = document.getElementById("data-holder");
@@ -407,7 +410,7 @@
 	
 	    tableBody.innerHTML = "";
 	    appointments.forEach(app => {
-	      const statusText = app.status === 0 ? "Pending" : "Assigned";
+			const statusText = app.status === 0 ? "Pending" : app.status === 1 ? "Assigned" : "Treated";
 	      const row = `
 	        <tr>
 	          <td>${app.userName}</td>

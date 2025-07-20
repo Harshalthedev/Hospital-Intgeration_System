@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -118,14 +119,21 @@ public class DoctorController {
     
     @GetMapping("/appointments/{id}/{status}")
     public ResponseEntity<AppointmentModel> updateAppointmentStatus(@PathVariable Long id, @PathVariable int status) {
-        if (status != 0 && status != 1) {
+        if (status != 0 && status != 1 && status != 2) {
             return ResponseEntity.badRequest().body(null);
         }
 
         AppointmentModel updatedAppointment = appointmentService.updateAppointmentStatus(id, status);
         return ResponseEntity.ok(updatedAppointment);
     }
-
-
-
+    
+    @GetMapping("/appointment/{status}/{doctorName}")
+    public List<AppointmentModel> getAppointmentsByDoctorAndStatus(
+            @PathVariable String doctorName,
+            @PathVariable int status) {
+    	
+        return appointmentService.findByDoctorNameAndStatus(doctorName, status);
+    }
+    
+    
 }
