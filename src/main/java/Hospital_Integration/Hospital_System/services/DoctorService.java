@@ -23,8 +23,6 @@ public class DoctorService {
 
     // Method to register a new user
     public DoctorModel registerDoctor(String email, String password, String displayName, int hospitalId, String specialization, Long contact) {
-        System.out.println("Hello iam in hospital register");
-    	System.out.print(doctorRepo.findByEmail(email));
         if (doctorRepo.findByEmail(email) != null) {
             throw new RuntimeException("User with email " + email + " already exists");
         }

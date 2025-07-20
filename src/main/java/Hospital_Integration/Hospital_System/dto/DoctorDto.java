@@ -1,4 +1,4 @@
-package Hospital_Integration.Hospital_System.dto;
+	package Hospital_Integration.Hospital_System.dto;
 
 public class DoctorDto {
     private String email;

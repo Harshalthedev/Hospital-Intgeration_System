@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>Doctor Dashboard</title>
   <style>
     body {
@@ -118,8 +119,8 @@
   </style>
 </head>
 <body>
-
 <div class="layout">
+	<div id="doctor-data" th:attr="data-id=${ID}"></div>
   <div class="sidebar">
     <div>
       <div class="info">
@@ -175,29 +176,28 @@
       </div>
     </div>
 
-    <div id="detailsTab" class="tabContent hidden">
-      <div class="card">
-		<h3>Update My Details</h3>
-		<form id="detailsForm">
-		  <div class="form-group">
-		    <label>Full Name (readonly)</label><br/>
-		    <input type="text" id="detailName" th:value="${doctorName}" value="Doctor Name" disabled />
-		  </div>
-		  <div class="form-group">
-		    <label>Contact</label><br/>
-		    <input type="text" id="detailContact" th:value="${doctorContact}" required />
-		  </div>
-		  <div class="form-group">
-		    <label>New Password</label><br/>
-		    <input type="password" id="detailPassword" placeholder="Leave blank to keep current" />
-		  </div>
-		  <button type="submit" class="btn btn-submit">Update Details</button>
-		</form>
-      </div>
-    </div>
-  </div>
-</div>
-
+	<div id="detailsTab" class="tabContent hidden">
+	  <form id="detailsForm">
+	    <div class="form-group">
+	      <label>Name:</label>
+	      <input type="text" id="detailName" disabled />
+	    </div>
+	    <div class="form-group">
+	      <label>Contact:</label>
+	      <input type="text" id="detailContact" required />
+	    </div>
+	    <div class="form-group">
+	      <label>Email:</label>
+	      <input type="text" id="detailEmail" required />
+	    </div>
+	    <div class="form-group">
+	      <label>Password:</label>
+	      <input type="password" id="detailPassword" />
+	    </div>
+	    <button type="submit" class="btn btn-submit">Save Changes</button>
+	  </form>
+	</div>
+	</body>
 <script>
 let currentTabId = 'newTab';
 
@@ -213,8 +213,15 @@ function showTab(tabId) {
     currentTabId = tabId;
   }
 
-  loadAppointmentsForCurrentTab();
+  if (tabId === 'detailsTab') {
+    loadDoctorDetails();
+  } else {
+    loadAppointmentsForCurrentTab();
+  }
 }
+
+
+
 
 function fetchAppointmentsByStatus(status, containerId, actionButtonText, nextStatus) {
   const container = document.getElementById(containerId);
@@ -290,20 +297,65 @@ function logout() {
 
 document.getElementById('detailsForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const contact = document.getElementById('detailContact').value;
-  const password = document.getElementById('detailPassword').value;
-  const payload = { contact };
-  if (password.trim() !== '') payload.password = password;
 
-  fetch('/api/doctor/update', {
+  const contact = document.getElementById('detailContact').value;
+  const email = document.getElementById('detailEmail').value;
+  const password = document.getElementById('detailPassword').value;
+  const id = document.getElementById('doctor-data').dataset.id;
+  const doctorId = parseInt(id);
+
+  const payload = { contact, email };
+  if (password.trim() !== '') {
+    payload.password = password;
+  }
+
+  // ✅ Get CSRF token and header name
+  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+  fetch(`/doctor/update/${doctorId}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      [csrfHeader]: csrfToken  // ✅ Dynamic CSRF header name (e.g., X-CSRF-TOKEN)
+    },
     body: JSON.stringify(payload)
-  }).then(() => {
-    alert('Details updated.');
-    document.getElementById('detailPassword').value = '';
-  });
+  })
+    .then(async res => {
+      const text = await res.text();
+      if (res.ok) {
+        alert('Details updated.');
+        document.getElementById('detailPassword').value = '';
+      } else {
+        alert('Failed to update details: ' + text);
+      }
+    })
+    .catch(err => {
+      console.error("Error updating doctor details", err);
+      alert("Something went wrong.");
+    });
 });
+
+
+function loadDoctorDetails() {
+  const id = document.getElementById('doctor-data').dataset.id;
+  const doctorId = parseInt(id);
+  console.log("Loading doctor details for doctorId:", doctorId);
+
+  fetch(`/doctor/details/${doctorId}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("Doctor data:", data);  // Make sure this prints correctly
+      document.getElementById('detailName').value = data.name || '';
+      document.getElementById('detailContact').value = data.contact || '';
+      document.getElementById('detailEmail').value = data.email || '';
+    })
+    .catch(err => {
+      console.error("Error loading doctor details", err);
+      alert("Could not load doctor details.");
+    });
+}
+
 
 // OPD Queue logic
 function loadOPDQueue() {
@@ -322,5 +374,4 @@ showTab('newTab');
 setInterval(loadOPDQueue, 10000);
 </script>
 
-</body>
 </html>
