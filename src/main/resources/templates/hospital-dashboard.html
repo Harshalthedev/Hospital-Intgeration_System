@@ -419,13 +419,19 @@
 	      fetchHospitalList();
 	  }
 
-      if (tab === "doctors") {
-        fetchDoctorList();
-      }
+	  if (tab === "emergency") {
+	    const content = document.getElementById("content");
 	  
-	  if (tab == "emergency") {
-	  	fetchEmergencyPatient();
+	    // Set up the header and container for patients
+	    content.innerHTML = `
+	      <h2>🚨 Emergency Patients</h2>
+	      <div id="emergency-patient-list" class="hospital-list"></div>
+	    `;
+	  
+	    // Fetch and render patients
+	    fetchEmergencyPatient();
 	  }
+
 
 	  if (tab === "users") {
 	    const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
@@ -570,8 +576,40 @@
     }
 	
 	async function fetchEmergencyPatient() {
-		
+	  const hospitalId = document.getElementById("data-holder").dataset.hospitalId;  
+	  const listContainer = document.getElementById("emergency-patient-list");
+	
+	  try {
+	    const response = await fetch(`/hospital/emergencyPatientFetch/${hospitalId}`);
+	    if (!response.ok) throw new Error('Failed to fetch emergency patients');
+	
+	    const patients = await response.json();
+	
+	    if (!patients.length) {
+	      listContainer.innerHTML = `<p>No emergency patients found.</p>`;
+	      return;
+	    }
+	
+	    patients.forEach((pat) => {
+	      const card = document.createElement("div");
+	      card.className = "hospital-card";
+	      card.innerHTML = `
+	        <h3>Name: ${pat.name}</h3>
+	        <p>Email: ${pat.email}</p>
+	        <p>Age: ${pat.age}</p>
+	        <p>Disease: ${pat.disease}</p>
+	        <p>Gender: ${pat.gender}</p>
+	      `;
+	      listContainer.appendChild(card);
+	    });
+	
+	  } catch (error) {
+	    console.error('Error fetching patients:', error);
+	    listContainer.innerHTML = `<p>Failed to load emergency patients. Please try again later.</p>`;
+	  }
 	}
+
+
 
     async function referPatient() {
       const name = document.getElementById("refer-patient-name").value;

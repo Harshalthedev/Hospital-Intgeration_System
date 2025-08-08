@@ -14,28 +14,51 @@ public class ReferEmergencyPatient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	private String email;
+	private String name;
 	private int age;
 	private String gender;
 	private String disease;
 	private int hospitalId;
 	private int status;
+	
 	public ReferEmergencyPatient() {
+		super();
 	}
-	public ReferEmergencyPatient(int hospitalId, String name, int age, String gender, String email, String disease, int status) {
+	
+	public ReferEmergencyPatient(int hospitalId, int age, int status, String name, String gender, String email, String disease) {
 		super();
 		this.email = email;
+		this.name = name;
 		this.age = age;
 		this.gender = gender;
 		this.disease = disease;
 		this.hospitalId = hospitalId;
 		this.status = status;
 	}
+	
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public int getAge() {
 		return age;
 	}

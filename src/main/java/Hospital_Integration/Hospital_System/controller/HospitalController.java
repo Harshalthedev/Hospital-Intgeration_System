@@ -15,6 +15,7 @@ import Hospital_Integration.Hospital_System.dto.HospitalDto;
 import Hospital_Integration.Hospital_System.model.AppointmentModel;
 import Hospital_Integration.Hospital_System.model.BedModel;
 import Hospital_Integration.Hospital_System.model.HospitalModel;
+import Hospital_Integration.Hospital_System.model.ReferEmergencyPatient;
 import Hospital_Integration.Hospital_System.repository.AppointmentRepo;
 import Hospital_Integration.Hospital_System.repository.BedRepo;
 import Hospital_Integration.Hospital_System.repository.BedService;
@@ -179,11 +180,22 @@ public class HospitalController {
         }
     }
     
+    @GetMapping("/emergencyPatientFetch/{hospitalId}")
+    public ResponseEntity<List<ReferEmergencyPatient>> fetchEmergencyPatient(@PathVariable int hospitalId) {
+        try {
+            List<ReferEmergencyPatient> patients = hospitalService.fetchEmergencyPatient(hospitalId);
+            return ResponseEntity.ok(patients);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    
     @GetMapping("/referPatient/{hospitalId}/{name}/{age}/{gender}/{email}/{disease}")
     public ResponseEntity<String> referEmergencyPatient(@PathVariable int hospitalId, @PathVariable String name, @PathVariable int age, 
     @PathVariable String gender, @PathVariable String email, @PathVariable String disease) {
     	try {
-    		hospitalService.referPatient(hospitalId, name, age, gender, email, disease);
+    		hospitalService.referPatient(hospitalId, age, 0, name, gender, email, disease);
             return ResponseEntity.ok("Patient refered successfully.");
 
     	}

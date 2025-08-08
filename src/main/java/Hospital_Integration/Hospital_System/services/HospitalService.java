@@ -19,6 +19,7 @@ public class HospitalService {
     private final PasswordEncoder passwordEncoder;
 
     public HospitalService(HospitalRepo hospitalRepo, ReferPatientRepo referPatientRepo, PasswordEncoder passwordEncoder) {
+		super();
         this.referPatientRepo = referPatientRepo;
     	this.hospitalRepo = hospitalRepo;
         this.passwordEncoder = passwordEncoder;
@@ -54,13 +55,18 @@ public class HospitalService {
         return hospitalRepo.findByEmail(email);
     }
     
-    public void referPatient(int hospitalId, String name, int age, String gender, String email, String disease) {
-    	ReferEmergencyPatient patient = new ReferEmergencyPatient(hospitalId, name, age, gender, email, disease, 0);
-    	referPatientRepo.save(patient);
+    
+    public List<ReferEmergencyPatient> fetchEmergencyPatient(int hospitalId) {
+    	return referPatientRepo.findByHospitalIdAndStatus(hospitalId, 0);
     }
     
     public List<HospitalModel> getAllAvailableHospitals() {
         List<HospitalModel> hospitals = hospitalRepo.findAll();
         return hospitals;
     }
+
+	public void referPatient(int hospitalId, int age, int status, String name, String gender, String email, String disease) {
+		ReferEmergencyPatient patient = new ReferEmergencyPatient(hospitalId, age, status, name, gender, email, disease);
+		referPatientRepo.save(patient);
+	}
 }
