@@ -17,7 +17,6 @@ public class BedServiceImpl implements BedService {
 
     @Override
     public void updateBeds(int hospitalId, int totalBeds, int occupiedBeds) {
-        System.out.println("Updating beds for hospitalId=" + hospitalId);
         BedModel existingBed = bedRepo.findByHospitalId(hospitalId);
         if (existingBed == null) {
             existingBed = new BedModel(hospitalId, totalBeds, occupiedBeds);

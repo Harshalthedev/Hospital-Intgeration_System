@@ -273,6 +273,7 @@
       <button onclick="showTab('doctors')">👨‍⚕️ Doctors</button>
       <button onclick="showTab('users')">👤 Users</button>
       <button onclick="showTab('refer')">🔄 Refer Patient</button>
+	  <button onclick="showTab('emergency')">🔄 Emergency Patient</button>
 	  <button onclick="showTab('updateBeds')">🛏️ Update Beds</button>
       <button onclick="showTab('register')">📝 Register Patient</button>
       <button onclick="logout()">🚪 Logout</button>
@@ -373,7 +374,6 @@
 	    `;
 	  }
 
-
 	  if (tab === "hospitals") {
 	      const content = document.getElementById("content");
 	      content.innerHTML = `
@@ -422,6 +422,10 @@
       if (tab === "doctors") {
         fetchDoctorList();
       }
+	  
+	  if (tab == "emergency") {
+	  	fetchEmergencyPatient();
+	  }
 
 	  if (tab === "users") {
 	    const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
@@ -456,6 +460,14 @@
               <label>Patient Name</label>
               <input type="text" id="refer-patient-name" placeholder="Enter patient name">
             </div>
+			<div class="form-group">
+              <label>Patient Age</label>
+              <input type="text" id="refer-patient-age" placeholder="Enter patient age">
+			</div>
+			<div class="form-group">
+              <label>Patient gender</label>
+              <input type="text" id="refer-patient-gender" placeholder="Enter patient gender">
+			</div>
             <div class="form-group">
               <label>Email ID</label>
               <input type="email" id="refer-patient-email" placeholder="Enter patient email">
@@ -465,6 +477,7 @@
               <select id="refer-disease">
                 <option value="">Select</option>
                 <option value="Cardiology">Cardiology</option>
+				<option value="Accident">Accident</option>
                 <option value="Neurology">Neurology</option>
                 <option value="Orthopedics">Orthopedics</option>
                 <option value="Dermatology">Dermatology</option>
@@ -555,19 +568,36 @@
         doctorList.innerHTML = `<p>Error loading doctors. Please try again later.</p>`;
       }
     }
+	
+	async function fetchEmergencyPatient() {
+		
+	}
 
-    function referPatient() {
+    async function referPatient() {
       const name = document.getElementById("refer-patient-name").value;
+	  const age = parseInt(document.getElementById("refer-patient-age").value);
+	  const gender = document.getElementById("refer-patient-gender").value;
       const email = document.getElementById("refer-patient-email").value;
       const disease = document.getElementById("refer-disease").value;
       const hospitalId = document.getElementById("hospital-select").value;
+	  const hosId = parseInt(hospitalId);
 
-      if (!name || !email || !disease || !hospitalId) {
+      if (!name || !email || !disease || !hospitalId || !age || !gender) {
         alert("Please fill all fields.");
         return;
       }
 
-      alert(`Patient \"${name}\" (${email}) with \"${disease}\" referred to hospital ID ${hospitalId}!`);
+	   try {
+	     const response = await fetch(`/hospital/referPatient/${hosId}/${name}/${age}/${gender}/${email}/${disease}`);
+	     if (!response.ok) throw new Error('Failed to refer patient');
+	  
+	     alert("Patient reffered successfully.");
+	     showTab("home");
+	   } 
+	   catch (error) {
+	     console.error(error);
+	     alert("An error occurred while refering patient");
+	   }
     }
 	
 	async function submitBedUpdate() {

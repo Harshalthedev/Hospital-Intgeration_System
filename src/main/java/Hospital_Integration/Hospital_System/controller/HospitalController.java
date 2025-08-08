@@ -170,11 +170,26 @@ public class HospitalController {
     		BedUpdateRequest request = new BedUpdateRequest(hospitalId, totalBeds, occupiedBeds);
             bedService.updateBeds(request.getHospitalId(), request.getTotalBeds(), request.getOccupiedBeds());
             return ResponseEntity.ok("Bed count updated successfully.");
-        } catch (IllegalArgumentException e) {
+        } 
+    	catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
+        } 
+    	catch (Exception e) {
             return ResponseEntity.status(500).body("Failed to update beds: " + e.getMessage());
         }
+    }
+    
+    @GetMapping("/referPatient/{hospitalId}/{name}/{age}/{gender}/{email}/{disease}")
+    public ResponseEntity<String> referEmergencyPatient(@PathVariable int hospitalId, @PathVariable String name, @PathVariable int age, 
+    @PathVariable String gender, @PathVariable String email, @PathVariable String disease) {
+    	try {
+    		hospitalService.referPatient(hospitalId, name, age, gender, email, disease);
+            return ResponseEntity.ok("Patient refered successfully.");
+
+    	}
+    	catch(Exception e) {
+            return ResponseEntity.status(500).body("Failed to update beds: " + e.getMessage());
+    	}
     }
     
     @GetMapping("/findById/{hospitalId}")
