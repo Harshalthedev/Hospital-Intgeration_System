@@ -7,16 +7,20 @@ import org.springframework.stereotype.Service;
 
 import Hospital_Integration.Hospital_System.model.DoctorModel;
 import Hospital_Integration.Hospital_System.model.HospitalModel;
+import Hospital_Integration.Hospital_System.model.ReferEmergencyPatient;
 import Hospital_Integration.Hospital_System.repository.DoctorRepo;
 import Hospital_Integration.Hospital_System.repository.HospitalRepo;
+import Hospital_Integration.Hospital_System.repository.ReferPatientRepo;
 
 @Service
 public class HospitalService {
 	private final HospitalRepo hospitalRepo;
+	private final ReferPatientRepo referPatientRepo;
     private final PasswordEncoder passwordEncoder;
 
-    public HospitalService(HospitalRepo hospitalRepo, PasswordEncoder passwordEncoder) {
-        this.hospitalRepo = hospitalRepo;
+    public HospitalService(HospitalRepo hospitalRepo, ReferPatientRepo referPatientRepo, PasswordEncoder passwordEncoder) {
+        this.referPatientRepo = referPatientRepo;
+    	this.hospitalRepo = hospitalRepo;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -49,8 +53,11 @@ public class HospitalService {
     public HospitalModel findByEmail(String email) {
         return hospitalRepo.findByEmail(email);
     }
-
-
+    
+    public void referPatient(int hospitalId, String name, int age, String gender, String email, String disease) {
+    	ReferEmergencyPatient patient = new ReferEmergencyPatient(hospitalId, name, age, gender, email, disease, 0);
+    	referPatientRepo.save(patient);
+    }
     
     public List<HospitalModel> getAllAvailableHospitals() {
         List<HospitalModel> hospitals = hospitalRepo.findAll();
