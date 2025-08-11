@@ -191,11 +191,25 @@ public class HospitalController {
     }
 
     
-    @GetMapping("/referPatient/{hospitalId}/{name}/{age}/{gender}/{email}/{disease}")
-    public ResponseEntity<String> referEmergencyPatient(@PathVariable int hospitalId, @PathVariable String name, @PathVariable int age, 
-    @PathVariable String gender, @PathVariable String email, @PathVariable String disease) {
+    @GetMapping("/updatePatientStatus/{patientId}") 
+    public ResponseEntity<String> updatePateintStatus(@PathVariable int patientId) {
     	try {
-    		hospitalService.referPatient(hospitalId, age, 0, name, gender, email, disease);
+    		hospitalService.updatePateintStatus(patientId);
+            return ResponseEntity.ok("Patient refered successfully.");
+
+    	}
+    	catch(Exception e) {
+            return ResponseEntity.status(500).body("Failed to update beds: " + e.getMessage());
+    	}
+    }
+    
+    @GetMapping("/referPatient/{hospitalId}/{name}/{age}/{gender}/{email}/{disease}/{referhospitalId}")
+    public ResponseEntity<String> referEmergencyPatient(@PathVariable int hospitalId, @PathVariable String name, @PathVariable int age, 
+    @PathVariable String gender, @PathVariable String email, @PathVariable String disease, @PathVariable int referhospitalId) {
+    	try {
+    		HospitalModel hospital = hospitalService.findByHospitalId(referhospitalId);
+    		String referHositalName = hospital.getDisplayName();
+    		hospitalService.referPatient(hospitalId, age, 0, name, gender, email, disease, referHositalName);
             return ResponseEntity.ok("Patient refered successfully.");
 
     	}

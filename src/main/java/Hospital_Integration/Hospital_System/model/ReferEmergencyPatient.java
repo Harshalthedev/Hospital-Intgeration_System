@@ -19,15 +19,17 @@ public class ReferEmergencyPatient {
 	private String gender;
 	private String disease;
 	private int hospitalId;
+	private String referHositalName;
 	private int status;
 	
 	public ReferEmergencyPatient() {
 		super();
 	}
 	
-	public ReferEmergencyPatient(int hospitalId, int age, int status, String name, String gender, String email, String disease) {
+	public ReferEmergencyPatient(int hospitalId, int age, int status, String name, String gender, String email, String disease, String referHositalName) {
 		super();
 		this.email = email;
+		this.referHositalName = referHositalName;
 		this.name = name;
 		this.age = age;
 		this.gender = gender;
@@ -50,8 +52,16 @@ public class ReferEmergencyPatient {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}	
+
+	public String getReferHositalName() {
+		return referHositalName;
 	}
-	
+
+	public void setReferHositalName(String referHositalName) {
+		this.referHositalName = referHositalName;
+	}
+
 	public String getName() {
 		return name;
 	}

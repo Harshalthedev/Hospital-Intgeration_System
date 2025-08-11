@@ -421,16 +421,19 @@
 
 	  if (tab === "emergency") {
 	    const content = document.getElementById("content");
-	  
-	    // Set up the header and container for patients
 	    content.innerHTML = `
 	      <h2>🚨 Emergency Patients</h2>
-	      <div id="emergency-patient-list" class="hospital-list"></div>
+	      <div style="margin-bottom: 1rem;">
+	        <button id="pending-tab" class="user-tab-btn active" onclick="switchEmergencyTab('pending')">🕒 Pending (<span id="pending-count">0</span>)</button>
+	        <button id="treated-em-tab" class="user-tab-btn" onclick="switchEmergencyTab('treated')">✅ Accepted (<span id="treated-count">0</span>)</button>
+	      </div>
+	      <div id="pending-list" class="hospital-list"></div>
+	      <div id="treated-list" class="hospital-list" style="display:none;"></div>
 	    `;
-	  
-	    // Fetch and render patients
 	    fetchEmergencyPatient();
+	    fetchTreatedEmergencyPatients();
 	  }
+
 
 
 	  if (tab === "users") {
@@ -575,43 +578,118 @@
       }
     }
 	
+	let pendingPatients = [];
+	let treatedPatients = [];
+	
+	function renderPendingPatients() {
+	  const container = document.getElementById("pending-list");
+	  document.getElementById("pending-count").textContent = pendingPatients.length;
+	  if (!pendingPatients.length) {
+	    container.innerHTML = `<p>No pending emergency patients.</p>`;
+	    return;
+	  }
+	  container.innerHTML = "";
+	  pendingPatients.forEach(pat => {
+	    const card = document.createElement("div");
+	    card.className = "hospital-card";
+	    card.innerHTML = `
+	      <h3>Name: ${pat.name}</h3>
+	      <h3>Referred By: ${pat.referHositalName}</h3>
+	      <p>Email: ${pat.email}</p>
+	      <p>Age: ${pat.age}</p>
+	      <p>Disease: ${pat.disease}</p>
+	      <p>Gender: ${pat.gender}</p>
+	      <button onclick="updateEmergencyStatus(${pat.id})">Accept</button>
+	    `;
+	    container.appendChild(card);
+	  });
+	}
+	
+	function renderTreatedPatients() {
+	  const container = document.getElementById("treated-list");
+	  document.getElementById("treated-count").textContent = treatedPatients.length;
+	  if (!treatedPatients.length) {
+	    container.innerHTML = `<p>No accepted emergency patients.</p>`;
+	    return;
+	  }
+	  container.innerHTML = "";
+	  treatedPatients.forEach(pat => {
+	    const card = document.createElement("div");
+	    card.className = "hospital-card";
+	    card.innerHTML = `
+	      <h3>Name: ${pat.name}</h3>
+	      <h3>Referred By: ${pat.referHositalName}</h3>
+	      <p>Email: ${pat.email}</p>
+	      <p>Age: ${pat.age}</p>
+	      <p>Disease: ${pat.disease}</p>
+	      <p>Gender: ${pat.gender}</p>
+	    `;
+	    container.appendChild(card);
+	  });
+	}
+	
 	async function fetchEmergencyPatient() {
-	  const hospitalId = document.getElementById("data-holder").dataset.hospitalId;  
-	  const listContainer = document.getElementById("emergency-patient-list");
-	
+	  const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
 	  try {
-	    const response = await fetch(`/hospital/emergencyPatientFetch/${hospitalId}`);
-	    if (!response.ok) throw new Error('Failed to fetch emergency patients');
+	    const res = await fetch(`/hospital/emergencyPatientFetch/${hospitalId}`);
+	    if (!res.ok) throw new Error("Failed to fetch pending emergency patients");
+	    pendingPatients = await res.json();
+	    renderPendingPatients();
+	  } catch (err) {
+	    console.error(err);
+	  }
+	}
 	
-	    const patients = await response.json();
+	async function fetchTreatedEmergencyPatients() {
+	  const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
+	  try {
+	    const res = await fetch(`/hospital/emergencyPatientFetchStatusOne/${hospitalId}`);
+	    if (!res.ok) throw new Error("Failed to fetch treated emergency patients");
+	    treatedPatients = await res.json();
+	    renderTreatedPatients();
+	  } catch (err) {
+	    console.error(err);
+	  }
+	}
 	
-	    if (!patients.length) {
-	      listContainer.innerHTML = `<p>No emergency patients found.</p>`;
-	      return;
+	async function updateEmergencyStatus(patientId) {
+		const patId = parseInt(patientId);
+	  try {
+	    const res = await fetch(`/hospital/updatePatientStatus/${patId}`);
+	    if (!res.ok) throw new Error("Failed to update status");
+	    const index = pendingPatients.findIndex(p => p.id === patId);
+	    if (index > -1) {
+	      const updated = { ...pendingPatients[index], status: 1 };
+	      pendingPatients.splice(index, 1);
+	      treatedPatients.push(updated);
+	      renderPendingPatients();
+	      renderTreatedPatients();
 	    }
+	  } catch (err) {
+	    console.error(err);
+	    alert("Error updating status");
+	  }
+	}
 	
-	    patients.forEach((pat) => {
-	      const card = document.createElement("div");
-	      card.className = "hospital-card";
-	      card.innerHTML = `
-	        <h3>Name: ${pat.name}</h3>
-	        <p>Email: ${pat.email}</p>
-	        <p>Age: ${pat.age}</p>
-	        <p>Disease: ${pat.disease}</p>
-	        <p>Gender: ${pat.gender}</p>
-	      `;
-	      listContainer.appendChild(card);
-	    });
-	
-	  } catch (error) {
-	    console.error('Error fetching patients:', error);
-	    listContainer.innerHTML = `<p>Failed to load emergency patients. Please try again later.</p>`;
+	function switchEmergencyTab(type) {
+	  document.getElementById("pending-tab").classList.remove("active");
+	  document.getElementById("treated-em-tab").classList.remove("active");
+	  if (type === "pending") {
+	    document.getElementById("pending-tab").classList.add("active");
+	    document.getElementById("pending-list").style.display = "block";
+	    document.getElementById("treated-list").style.display = "none";
+	  } else {
+	    document.getElementById("treated-em-tab").classList.add("active");
+	    document.getElementById("pending-list").style.display = "none";
+	    document.getElementById("treated-list").style.display = "block";
 	  }
 	}
 
 
 
+
     async function referPatient() {
+	  const referhospitalId = document.getElementById("data-holder").dataset.hospitalId;
       const name = document.getElementById("refer-patient-name").value;
 	  const age = parseInt(document.getElementById("refer-patient-age").value);
 	  const gender = document.getElementById("refer-patient-gender").value;
@@ -626,7 +704,7 @@
       }
 
 	   try {
-	     const response = await fetch(`/hospital/referPatient/${hosId}/${name}/${age}/${gender}/${email}/${disease}`);
+	     const response = await fetch(`/hospital/referPatient/${hosId}/${name}/${age}/${gender}/${email}/${disease}/${referhospitalId}`);
 	     if (!response.ok) throw new Error('Failed to refer patient');
 	  
 	     alert("Patient reffered successfully.");

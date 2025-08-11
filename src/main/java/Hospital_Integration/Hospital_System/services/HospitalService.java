@@ -65,8 +65,15 @@ public class HospitalService {
         return hospitals;
     }
 
-	public void referPatient(int hospitalId, int age, int status, String name, String gender, String email, String disease) {
-		ReferEmergencyPatient patient = new ReferEmergencyPatient(hospitalId, age, status, name, gender, email, disease);
+	public void referPatient(int hospitalId, int age, int status, String name, String gender, String email, String disease, String referHositalName) {
+		ReferEmergencyPatient patient = new ReferEmergencyPatient(hospitalId, age, status, name, gender, email, disease, referHositalName);
 		referPatientRepo.save(patient);
+	}
+
+	public void updatePateintStatus(int patientId) {
+		ReferEmergencyPatient patient = referPatientRepo.findById(patientId);
+		patient.setStatus(1);
+		referPatientRepo.save(patient);
+		
 	}
 }
