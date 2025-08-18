@@ -313,6 +313,10 @@
       const content = document.getElementById("content");
       content.innerHTML = "";
 
+	  if (tab === "doctors") {
+	    fetchDoctorList();
+	  }
+
 	  if (tab === "home") {
 	    const content = document.getElementById("content");
 	    const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
@@ -537,46 +541,49 @@
           </div>`;
       }
     }
+		
+	async function fetchDoctorList() {
+	  const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
+	
+	  if (!hospitalId) {
+	    alert('Hospital ID not found.');
+	    return;
+	  }
+	
+	  const content = document.getElementById("content");
+	  content.innerHTML = `<h2>👨‍⚕️ Doctors</h2><div id="doctor-list" class="hospital-list"></div>`;
+	  const doctorList = document.getElementById("doctor-list");
+	
+	  try {
+	    const response = await fetch(`/doctor/findDoctor-ByHospitalId/${hospitalId}`);
+	    if (!response.ok) throw new Error('Failed to fetch doctors');
+	
+	    const doctors = await response.json();
+	
+	    if (!doctors.length) {
+	      doctorList.innerHTML = `<p>No doctors found for this hospital.</p>`;
+	      return;
+	    }
+	
+	    doctors.forEach((doc) => {
+	      const card = document.createElement("div");
+	      card.className = "hospital-card";
+	      card.innerHTML = `
+	        <h3>Dr. ${doc.displayName}</h3>
+	        <p>Specialization: ${doc.specialization || 'N/A'}</p>
+	        <p>Email: ${doc.email || 'N/A'}</p>
+	        <p>Hospital Id: ${doc.hospitalId || 'N/A'}</p>
+	      `;
+	      doctorList.appendChild(card);
+	    });
+	
+	  } catch (error) {
+	    console.error('Error fetching doctors:', error);
+	    doctorList.innerHTML = `<p>Error loading doctors. Please try again later.</p>`;
+	  }
+	}
 
-    async function fetchDoctorList() {
-      const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
 
-      if (!hospitalId) {
-        alert('Hospital ID not found.');
-        return;
-      }
-
-      const content = document.getElementById("content");
-      content.innerHTML = `<h2>👨‍⚕️ Doctors</h2><div id="doctor-list" class="hospital-list"></div>`;
-      const doctorList = document.getElementById("doctor-list");
-
-      try {
-        const response = await fetch(`/doctor/findDoctor-ByHospitalId/${hospitalId}`);
-        if (!response.ok) throw new Error('Failed to fetch doctors');
-
-        const doctors = await response.json();
-        if (!doctors.length) {
-          doctorList.innerHTML = `<p>No doctors found for this hospital.</p>`;
-          return;
-        }
-
-        doctors.forEach((doc) => {
-          const card = document.createElement("div");
-          card.className = "hospital-card";
-          card.innerHTML = `
-            <h3>Dr. ${doc.displayName}</h3>
-            <p>Specialization: ${doc.specialization || 'N/A'}</p>
-            <p>Email: ${doc.email || 'N/A'}</p>
-            <p>Hospital Id: ${doc.hospitalId || 'N/A'}</p>
-          `;
-          doctorList.appendChild(card);
-        });
-
-      } catch (error) {
-        console.error('Error fetching doctors:', error);
-        doctorList.innerHTML = `<p>Error loading doctors. Please try again later.</p>`;
-      }
-    }
 	
 	let pendingPatients = [];
 	let treatedPatients = [];
@@ -643,7 +650,7 @@
 	async function fetchTreatedEmergencyPatients() {
 	  const hospitalId = document.getElementById("data-holder").dataset.hospitalId;
 	  try {
-	    const res = await fetch(`/hospital/emergencyPatientFetchStatusOne/${hospitalId}`);
+	    const res = await fetch(`/hospital/emergencyPatientFetch/${hospitalId}`);
 	    if (!res.ok) throw new Error("Failed to fetch treated emergency patients");
 	    treatedPatients = await res.json();
 	    renderTreatedPatients();

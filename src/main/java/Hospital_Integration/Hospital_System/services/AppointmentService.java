@@ -1,8 +1,11 @@
 package Hospital_Integration.Hospital_System.services;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import Hospital_Integration.Hospital_System.model.AppointmentModel;
@@ -19,7 +22,7 @@ public class AppointmentService {
 	}
 
 	public void submitAppointment(String userName, String userEmail, String userGender, int userAge, String userDisease, String doctorName,
-			int hospitalId, Date appointmentDate) {
+			int hospitalId, Date appointmentDate, int doctorId) {
 		AppointmentModel appointmentModel = new AppointmentModel(); 
 		appointmentModel.setUserName(userName);
 		appointmentModel.setUserEmail(userEmail);
@@ -30,6 +33,7 @@ public class AppointmentService {
 		appointmentModel.setHospitalId(hospitalId);
 		appointmentModel.setAppointmentDate(appointmentDate);
 		appointmentModel.setStatus(0);
+		appointmentModel.setDoctorId(doctorId);
 		
 		appointmentRepo.save(appointmentModel);
 	}
@@ -53,6 +57,20 @@ public class AppointmentService {
 	    appointment.setStatus(status);
 	    return appointmentRepo.save(appointment);
 	}
+	
+	public ResponseEntity<Map<String, Integer>> countOpdQueue(int doctorId) {
+	    // Fetch appointments for this doctor
+	    List<AppointmentModel> appointModel = appointmentRepo.findByDoctorId(doctorId);
 
+	    // Filter by status (0 or 1) and count
+	    int cnt = (int) appointModel.stream()
+	            .filter(a -> a.getStatus() == 1)
+	            .count();
+
+	    Map<String, Integer> response = new HashMap<>();
+	    response.put("count", cnt);
+
+	    return ResponseEntity.ok(response);
+	}
 
 }

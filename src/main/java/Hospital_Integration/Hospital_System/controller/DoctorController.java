@@ -183,5 +183,10 @@ public class DoctorController {
         return appointmentService.findByDoctorNameAndStatus(doctorName, status);
     }
     
+    @GetMapping("/count/{doctorId}")
+    public ResponseEntity<Map<String, Integer>> getOpdQueueCount(@PathVariable int doctorId) {
+        return appointmentService.countOpdQueue(doctorId);
+    }
+
     
 }

@@ -211,7 +211,8 @@ public class UserController {
                 request.userDisease,
                 request.doctorName,
                 request.hospitalId,
-                request.appointmentDate
+                request.appointmentDate,
+                request.doctorId
             );
             return ResponseEntity.ok("Appointment submitted successfully via JSON.");
         } catch (IllegalArgumentException e) {
