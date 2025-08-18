@@ -28,11 +28,11 @@ public class DoctorModel {
 
     @Column(unique = true, nullable = false)
     private Long contact;
+        
     
-    
-	public DoctorModel() {}
+    public DoctorModel() {}
 	
-	public DoctorModel( String email, String password, String displayName, int hospitalId, String specialization, Long contact) {
+	public DoctorModel(String email, String password, String displayName, int hospitalId, String specialization, Long contact) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -51,8 +51,6 @@ public class DoctorModel {
 
     // Getters and Setters
 
-    
-    
     public Long getId() {
         return id;
     }

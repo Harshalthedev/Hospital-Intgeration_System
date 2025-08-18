@@ -301,39 +301,41 @@
       return inputDate >= today;
     }
 
-    async function populateDoctors() {
-      const holder = document.getElementById("data-holder");
-      const hospitalId = parseInt(holder.dataset.hospitalId);
-      const disease = document.getElementById("disease").value;
-      const doctorSelect = document.getElementById("doctor");
-      doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+	async function populateDoctors() {
+	  const holder = document.getElementById("data-holder");
+	  const hospitalId = parseInt(holder.dataset.hospitalId);
+	  const disease = document.getElementById("disease").value;
+	  const doctorSelect = document.getElementById("doctor");
+	  doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+	
+	  if (!disease) {
+	    doctorSelect.disabled = true;
+	    return;
+	  }
+	
+	  try {
+	    const response = await fetch(`/doctor/findDoctor-ByHospitalId/${hospitalId}`);
+	    if (!response.ok) throw new Error('Failed to fetch doctors');
+	    const doctors = await response.json();
+	
+	    doctors.forEach(doctor => {
+	      if (doctor.specialization === disease) {
+	        const option = document.createElement("option");
+	        option.value = doctor.id; // ✅ Store doctor ID
+	        option.textContent = doctor.displayName; // Show name in dropdown
+	        option.dataset.name = doctor.displayName; // Keep display name for sending if needed
+	        doctorSelect.appendChild(option);
+	      }
+	    });
+	
+	    doctorSelect.appendChild(new Option("None", "None"));
+	    doctorSelect.disabled = false;
+	  } catch (error) {
+	    console.error('Error fetching doctors:', error);
+	    alert('Could not load doctors. Please try again later.');
+	  }
+	}
 
-      if (!disease) {
-        doctorSelect.disabled = true;
-        return;
-      }
-
-      try {
-        const response = await fetch(`/doctor/findDoctor-ByHospitalId/${hospitalId}`);
-        if (!response.ok) throw new Error('Failed to fetch doctors');
-        const doctors = await response.json();
-
-        doctors.forEach(doctor => {
-          if (doctor.specialization === disease) {
-            const option = document.createElement("option");
-            option.value = doctor.displayName;
-            option.textContent = doctor.displayName;
-            doctorSelect.appendChild(option);
-          }
-        });
-
-        doctorSelect.appendChild(new Option("None", "None"));
-        doctorSelect.disabled = false;
-      } catch (error) {
-        console.error('Error fetching doctors:', error);
-        alert('Could not load doctors. Please try again later.');
-      }
-    }
 
 	async function submitAppointment() {
 	  const name = document.getElementById('name').value;
@@ -341,7 +343,11 @@
 	  const email = document.getElementById('email').value;
 	  const gender = document.getElementById('gender').value;
 	  const disease = document.getElementById('disease').value;
-	  const doctor = document.getElementById('doctor').value || "None";
+	
+	  const doctorSelect = document.getElementById('doctor');
+	  const doctorId = doctorSelect.value !== "None" ? parseInt(doctorSelect.value) : null;
+	  const doctorName = doctorSelect.selectedOptions[0]?.dataset.name || "None";
+	
 	  const date = document.getElementById('date').value;
 	  const holder = document.getElementById("data-holder");
 	  const hospitalId = parseInt(holder.dataset.hospitalId);
@@ -360,7 +366,8 @@
 	    userGender: gender,
 	    userAge: parseInt(age),
 	    userDisease: disease,
-	    doctorName: doctor,
+	    doctorName: doctorName,
+	    doctorId: doctorId, // ✅ Send doctor ID to backend
 	    hospitalId: hospitalId,
 	    appointmentDate: date
 	  };
@@ -378,7 +385,6 @@
 	    const result = await response.text();
 	    if (response.ok) {
 	      alert("Success: " + result);
-	      // Delay for 1 second before reloading
 	      setTimeout(() => window.location.reload(), 1000);
 	    } else {
 	      alert("Error: " + result);
@@ -389,6 +395,7 @@
 	    alert('Something went wrong. Please try again.');
 	  }
 	}
+
 
 	
 	async function fetchAppointments() {

@@ -12,12 +12,14 @@ public class AppointmentRequest {
     public String userDisease;
     public String doctorName;
     public int hospitalId;
+	public int doctorId;
+
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     public Date appointmentDate;
 
 	public AppointmentRequest(String userName, String userEmail, String userGender, int userAge, String userDisease,
-			String doctorName, int hospitalId, Date appointmentDate) {
+			String doctorName, int hospitalId, Date appointmentDate, int doctorId) {
 		super();
 		this.userName = userName;
 		this.userEmail = userEmail;
@@ -26,6 +28,7 @@ public class AppointmentRequest {
 		this.userDisease = userDisease;
 		this.doctorName = doctorName;
 		this.hospitalId = hospitalId;
+		this.doctorId = doctorId;
 		this.appointmentDate = appointmentDate;
 	}
 
@@ -35,6 +38,14 @@ public class AppointmentRequest {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public int getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(int doctorId) {
+		this.doctorId = doctorId;
 	}
 
 	public String getUserEmail() {

@@ -20,6 +20,7 @@ public class AppointmentModel {
     private int userAge;
     private String userDisease;
     private String doctorName;
+    private int doctorId;
     private int hospitalId;
     private Date appointmentDate;
     private int status;
@@ -30,7 +31,7 @@ public class AppointmentModel {
 
 	
 	public AppointmentModel(String userName, String userEmail, String userGender, int userAge, String userDisease, String doctorName,
-			int hospitalId, Date appointmentDate) {
+			int hospitalId, Date appointmentDate, int doctorId) {
 		super();
 		this.userName = userName;
 		this.userEmail = userEmail;
@@ -53,6 +54,16 @@ public class AppointmentModel {
 		this.status = status;
 	}
 	
+
+	public int getDoctorId() {
+		return doctorId;
+	}
+
+
+	public void setDoctorId(int doctorId) {
+		this.doctorId = doctorId;
+	}
+
 
 	public Long getId() {
 		return id;
